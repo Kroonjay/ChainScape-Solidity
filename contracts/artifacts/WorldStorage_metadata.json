@@ -1,0 +1,260 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "oldWarden",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newWarden",
+						"type": "address"
+					}
+				],
+				"name": "WardenSet",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum WorldStorage.StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					}
+				],
+				"name": "getStarterEquipment",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "helmet",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "armor",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "weapon",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "blessing",
+								"type": "address"
+							}
+						],
+						"internalType": "struct WorldStorage.Equipment",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum WorldStorage.StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					}
+				],
+				"name": "getStarterExperience",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "strength",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "sorcery",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "archery",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "stamina",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "life",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "defense",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct WorldStorage.Experience",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getWarden",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum WorldStorage.StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum WorldStorage.EquipmentSlot",
+						"name": "equipmentSlot",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "newItem",
+						"type": "address"
+					}
+				],
+				"name": "setStarterItem",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum WorldStorage.StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum WorldStorage.Skill",
+						"name": "skill",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "skillXp",
+						"type": "uint256"
+					}
+				],
+				"name": "setStarterSkill",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newWarden",
+						"type": "address"
+					}
+				],
+				"name": "setWarden",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "warden",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/World.sol": "WorldStorage"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/World.sol": {
+			"keccak256": "0xb7371a7095ec5cd84a171465a3a41f512cdb4fd8dc892ec068520ce1db50d4d3",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://93fec820397f632708dfc25b420f39b2733b6caf477f50250296f533099411e9",
+				"dweb:/ipfs/QmeXFThyZi3qnGZDzVQTAb1enMfW2Ei3bHtysiA5oWJN1W"
+			]
+		}
+	},
+	"version": 1
+}

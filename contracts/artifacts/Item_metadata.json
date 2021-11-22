@@ -1,0 +1,170 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "enum EquipmentSlot",
+						"name": "_slot",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum ItemTier",
+						"name": "_tier",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "slot",
+				"outputs": [
+					{
+						"internalType": "enum EquipmentSlot",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tier",
+				"outputs": [
+					{
+						"internalType": "enum ItemTier",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "worldAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Item.sol": "Item"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Item.sol": {
+			"keccak256": "0x09f54fde65e19ae6a747603ed9228be764175d132fa23edb7995fc537205da47",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://80ec069e2a6a62a551eeafb0ae4dc974f73ebbaccf7b66dbc163ffd87c1d9e95",
+				"dweb:/ipfs/QmeSehyCpxqJVAhK5mZFnifeSQXCpK4s6CLB8U8vi5Zeew"
+			]
+		},
+		"contracts/World.sol": {
+			"keccak256": "0x61f515c942f46bd88b414ed005e19d8049cb2d3964a294b4aa68ef94662865fd",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://ec236d19c32e2db8cc94cf3d7f312a519194b28bfd11298895cceff055bba3d0",
+				"dweb:/ipfs/QmXgnQKVYZsCLoJQqLALKt7hFJUMtmY4N2XrggN3PRvp2G"
+			]
+		},
+		"contracts/enums/EquipmentSlot.sol": {
+			"keccak256": "0xd22b00ca113f4004131ac7001e8aafe67f2bdfc1448db31f12200acc11b456f4",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2b3b08a5a8f9c57f005a64faff5c13a3c16268b918829424caeb226a1d9a41a9",
+				"dweb:/ipfs/QmdkAbRvSVu62Csu8SLoWHwz9Nx1dmWDA3Dhe36ttjmQ5A"
+			]
+		},
+		"contracts/enums/ItemTier.sol": {
+			"keccak256": "0x6c4858772adb44a30e0c382e1b94c218693b99aa0ea4662e864c4fa4e70bb20b",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://d1c30eb74df56eead89929829cd0f61d18da188c4b8fc9a88b846072d0917741",
+				"dweb:/ipfs/QmaUn9P98DP2VAWTUeVFpNH9T3qWYVtSh4MQHTUoTxYcPt"
+			]
+		},
+		"contracts/enums/Skill.sol": {
+			"keccak256": "0x4b1a18f41983a4832f12f1378f2b19a85431d6b7906b6a56586b51efa6d54629",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://812acf9ff59e289194d3bfd12846b057e0fc3f6e2f1a6840acc0fe4cc2ced6e1",
+				"dweb:/ipfs/QmY3FZr7Ae1g3dD1LyvAqAE277eDa8tKRfRYgkRnwUVgSV"
+			]
+		},
+		"contracts/enums/StarterClass.sol": {
+			"keccak256": "0x513ea03c3efeb172bc2ce3eafd45bb93ddb5e451a0ff74389eed90eb95252e89",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a68dd009894b5f2e31c72a83b61e54f36e8aafc75e472e586acab74be6095367",
+				"dweb:/ipfs/QmTvkhMY1BXwCYitLaffsuoLpHL2qzX4rMsuXbt1p9wv3K"
+			]
+		},
+		"contracts/structs/Equipment.sol": {
+			"keccak256": "0x08697e1ffd6adfb31541fc33b4633c21b4b60090fb3b8cf9830d372cb59aec74",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://83543437d99ac5b20c65aab85ebd9e1f25eda822a53f8b8576265c30aed61fd8",
+				"dweb:/ipfs/QmPjH3rZkH9HTmGrHkW7zeBnAesRFqM4hueAtZAyPsEyoq"
+			]
+		},
+		"contracts/structs/Experience.sol": {
+			"keccak256": "0x2984fb30eb13d6d48b91edeb11064618575a48f3565db88feb7f6bd22813e733",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://4612a9c08370d8891f5b9478b5b8bdd45b00ff656bf3ef0c1247e048a24ff53a",
+				"dweb:/ipfs/QmUDFfvXnTPBULfnpEVMEs1VDqyzBzPtjB5ktHJGHbzLyu"
+			]
+		}
+	},
+	"version": 1
+}

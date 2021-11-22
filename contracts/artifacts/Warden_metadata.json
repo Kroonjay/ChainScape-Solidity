@@ -1,0 +1,202 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tickSeed",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tickNumber",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tickBlockHeight",
+						"type": "uint256"
+					}
+				],
+				"name": "GameTick",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tickSeed",
+						"type": "uint256"
+					}
+				],
+				"name": "setTick",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tick",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tickBlockHeight",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "world",
+				"outputs": [
+					{
+						"internalType": "contract World",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "worldAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Warden.sol": "Warden"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Warden.sol": {
+			"keccak256": "0x36ca14e366ebd9b116aa3b1926dbe7fb38c3f78b58a99d097f1c49d9190a6f9a",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://f49f7ff832c59c40f90d6be2f54bf2e0b8a77908bb8e738872b11aac24d23a50",
+				"dweb:/ipfs/QmQbAz4duJLXhnRFmENNaUsfVQuAQTCEQV6iQCU3VEBP4k"
+			]
+		},
+		"contracts/World.sol": {
+			"keccak256": "0x520f18652b7b4b66b814d22e3fa1a6db199f56e9576625e0b4fa75b98e5ee4bf",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://8402349c82c7340a2192efd11e0b7d2b25f1084b516787fa3869b4bc40e83195",
+				"dweb:/ipfs/QmXmuzqzKRhJaxNvFeGVnhZrodcAD8qkhFYyZ2Az8oqHoX"
+			]
+		},
+		"contracts/enums/EquipmentSlot.sol": {
+			"keccak256": "0xd22b00ca113f4004131ac7001e8aafe67f2bdfc1448db31f12200acc11b456f4",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://2b3b08a5a8f9c57f005a64faff5c13a3c16268b918829424caeb226a1d9a41a9",
+				"dweb:/ipfs/QmdkAbRvSVu62Csu8SLoWHwz9Nx1dmWDA3Dhe36ttjmQ5A"
+			]
+		},
+		"contracts/enums/Skill.sol": {
+			"keccak256": "0x4b1a18f41983a4832f12f1378f2b19a85431d6b7906b6a56586b51efa6d54629",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://812acf9ff59e289194d3bfd12846b057e0fc3f6e2f1a6840acc0fe4cc2ced6e1",
+				"dweb:/ipfs/QmY3FZr7Ae1g3dD1LyvAqAE277eDa8tKRfRYgkRnwUVgSV"
+			]
+		},
+		"contracts/enums/StarterClass.sol": {
+			"keccak256": "0x513ea03c3efeb172bc2ce3eafd45bb93ddb5e451a0ff74389eed90eb95252e89",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a68dd009894b5f2e31c72a83b61e54f36e8aafc75e472e586acab74be6095367",
+				"dweb:/ipfs/QmTvkhMY1BXwCYitLaffsuoLpHL2qzX4rMsuXbt1p9wv3K"
+			]
+		},
+		"contracts/structs/Equipment.sol": {
+			"keccak256": "0x08697e1ffd6adfb31541fc33b4633c21b4b60090fb3b8cf9830d372cb59aec74",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://83543437d99ac5b20c65aab85ebd9e1f25eda822a53f8b8576265c30aed61fd8",
+				"dweb:/ipfs/QmPjH3rZkH9HTmGrHkW7zeBnAesRFqM4hueAtZAyPsEyoq"
+			]
+		},
+		"contracts/structs/Experience.sol": {
+			"keccak256": "0x2984fb30eb13d6d48b91edeb11064618575a48f3565db88feb7f6bd22813e733",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://4612a9c08370d8891f5b9478b5b8bdd45b00ff656bf3ef0c1247e048a24ff53a",
+				"dweb:/ipfs/QmUDFfvXnTPBULfnpEVMEs1VDqyzBzPtjB5ktHJGHbzLyu"
+			]
+		}
+	},
+	"version": 1
+}

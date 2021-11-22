@@ -1,0 +1,87 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "enum WorldEngine.StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					}
+				],
+				"name": "getStarterEquipment",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "helmet",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "armor",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "weapon",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "etherealBlessing",
+								"type": "address"
+							}
+						],
+						"internalType": "struct WorldEngine.Equipment",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/World.sol": "WorldEngine"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/World.sol": {
+			"keccak256": "0x7264b9812af6f3aba6367d9496ff74c6c789619dd478186d1af8de52e75b89b4",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://26d21029ac120c8a11a748dfd4078dcf45881c3da1b3cf8bec560606546de993",
+				"dweb:/ipfs/Qmcr2yAMJbzxwLCQRxnpggjW4m9cQoaGHex82x9c7b4oqU"
+			]
+		}
+	},
+	"version": 1
+}

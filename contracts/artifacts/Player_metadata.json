@@ -1,0 +1,266 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_name",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "name",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "enum StarterClass",
+						"name": "starterClass",
+						"type": "uint8"
+					}
+				],
+				"name": "PlayerClaimedStarterPack",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "name",
+						"type": "bytes32"
+					}
+				],
+				"name": "PlayerCreated",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "equipment",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "helmet",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "armor",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "weapon",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "blessing",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "experience",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "strength",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sorcery",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "archery",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stamina",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "life",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "defense",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "isSafe",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "level",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "worldAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Player.sol": "Player"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Player.sol": {
+			"keccak256": "0x940e2745af45efd6b5a52db42e40d1cfb3e39112efb17ba28b1354f0836e614f",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://28fd5d9edbb3069798ab0491cc4f0eec6491edbb12e6c434fc48c9008ff883f4",
+				"dweb:/ipfs/QmfN4HMKVs3yHaHCGNz1oYdNQsqJCNoMG3fzexiYuzHcYo"
+			]
+		},
+		"contracts/World.sol": {
+			"keccak256": "0x40a198ab6522cef3db6f99336d705db58af99d2bda4b500ad9004cc3e6d37330",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://b3dd05b2af128747dcd3f228a9afcfaa67c98a5c9593536643885d3f02768461",
+				"dweb:/ipfs/QmWNpWAXynUEhdayAChvtn6H1pTREDJt3vigvzyLGyV9zi"
+			]
+		},
+		"contracts/enums/EquipmentSlot.sol": {
+			"keccak256": "0x92c2a94006a6049a02b51cf6da35de81e72c394e58aaf3b4f0833b25262160dc",
+			"urls": [
+				"bzz-raw://b04a9616328211763cd765c4abcd4c8f2881c6ebac1bfa3895111bd1da22f10d",
+				"dweb:/ipfs/QmX84FV4XDD2uBTkkgQqbjGSLZbiEcrGL3igMfEChv7hgX"
+			]
+		},
+		"contracts/enums/Skill.sol": {
+			"keccak256": "0x4b1a18f41983a4832f12f1378f2b19a85431d6b7906b6a56586b51efa6d54629",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://812acf9ff59e289194d3bfd12846b057e0fc3f6e2f1a6840acc0fe4cc2ced6e1",
+				"dweb:/ipfs/QmY3FZr7Ae1g3dD1LyvAqAE277eDa8tKRfRYgkRnwUVgSV"
+			]
+		},
+		"contracts/enums/StarterClass.sol": {
+			"keccak256": "0x513ea03c3efeb172bc2ce3eafd45bb93ddb5e451a0ff74389eed90eb95252e89",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://a68dd009894b5f2e31c72a83b61e54f36e8aafc75e472e586acab74be6095367",
+				"dweb:/ipfs/QmTvkhMY1BXwCYitLaffsuoLpHL2qzX4rMsuXbt1p9wv3K"
+			]
+		},
+		"contracts/structs/Equipment.sol": {
+			"keccak256": "0x08697e1ffd6adfb31541fc33b4633c21b4b60090fb3b8cf9830d372cb59aec74",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://83543437d99ac5b20c65aab85ebd9e1f25eda822a53f8b8576265c30aed61fd8",
+				"dweb:/ipfs/QmPjH3rZkH9HTmGrHkW7zeBnAesRFqM4hueAtZAyPsEyoq"
+			]
+		},
+		"contracts/structs/Experience.sol": {
+			"keccak256": "0x2984fb30eb13d6d48b91edeb11064618575a48f3565db88feb7f6bd22813e733",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://4612a9c08370d8891f5b9478b5b8bdd45b00ff656bf3ef0c1247e048a24ff53a",
+				"dweb:/ipfs/QmUDFfvXnTPBULfnpEVMEs1VDqyzBzPtjB5ktHJGHbzLyu"
+			]
+		}
+	},
+	"version": 1
+}
