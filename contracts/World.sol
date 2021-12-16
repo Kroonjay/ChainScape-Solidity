@@ -9,19 +9,24 @@ import "./structs/Experience.sol";
 import "./enums/EquipmentSlot.sol";
 import "./enums/StarterClass.sol";
 import "./enums/Skill.sol";
+import "./enums/EntityType.sol";
+import "./enums/DamageType.sol";
 
+import "./Entity.sol";
+import "./Warden.sol";
+import "./Vault.sol";
 
 contract World {
    
    event WardenSet(address indexed oldWarden, address indexed newWarden);
    event VaultSet(address indexed oldVault, address indexed newVault);
-   
+   event PlayerCreated(address indexed newPlayer, address indexed owner, StarterClass indexed starterClass);
    
    
     address public owner;
     
-    address public warden;
-    address public vault;
+    Warden public warden;
+    Vault public vault;
     
     
     uint8 public blocksPerTick; //Determines number of blocks between Game Ticks, called by Warden
@@ -29,11 +34,26 @@ contract World {
     uint256 starterExperience;
     
     uint32 levelMod = 1000000;
+
+    uint256 private baseWeaponDamage;
+
+    uint256 public baseDamageReduction;
+
+    uint public experiencePerHit;
+
+    uint public arenaMaxEntities;
+
+    uint public arenaMaxTicks;
     
     mapping (StarterClass => Equipment) starterEquipmentMapping;
     
     mapping (StarterClass => Experience) starterExperienceMapping;
-    
+
+    mapping(EntityType => bool) public attackableEntities;
+
+    mapping(Skill => DamageType) public skillDamageTypes;
+
+
     modifier isOwner() {
         // If the first argument of 'require' evaluates to 'false', execution terminates and all
         // changes to the state and to Ether balances are reverted.
@@ -90,19 +110,51 @@ contract World {
        }
    }
    
-   function getPlayerLevel (Experience memory _playerXp) external view returns (uint256) {
+    function getPlayerLevel (Experience memory _playerXp) external view returns (uint256) {
        return ((_playerXp.strength + _playerXp.sorcery + _playerXp.archery) / 3 + _playerXp.defense + _playerXp.life) % levelMod;
-   }
+    }
    
 
-   function setWarden(address newWarden) public isOwner {
+    function setWarden(address newWarden) public isOwner {
        emit WardenSet(warden, newWarden);
        warden = newWarden;
-   }
+    }
    
-   function setVault(address _newVault) public isOwner {
+    function setVault(address _newVault) public isOwner {
         emit VaultSet(vault, _newVault);
         vault = _newVault;
-   }
+    }
    
+    function setTickLength(uint8 _tickLength) external isOwner {
+        blocksPerTick = _tickLength;
+    }
+
+    function createPlayer(string _name, StarterClass _starterClass) external {
+        Player _newPlayer = new Player(_name, msg.sender, _starterClass);
+        emit PlayerCreated(_newPlayer, msg.sender, starterClass);
+    }
+
+    //function createArena()
+
+    function _hashWeapon(Weapon _weapon) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_weapon.owner, _weapon.seed, _weapon.weaponType, _weapon.damageType, _weapon.damage, _weapon.levelRequirement));
+    }
+
+    function hashPlayer(Player _player) external pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_player.owner, _player.equipment, _player.experience, _player.inventory));
+    }
+
+
+    function hashItem(Item _item) external pure returns (bytes32) {
+        if (_item.slot == EquipmentSlot.Weapon) {
+            return getWeaponHash(_item);
+        } else {
+            revert ("Item Slot Invalid or Not Yet Supported!");
+        }
+    }
+
+    function updateAttackableEntity(EntityType _eType, bool canAttack) external isOwner {
+        attackableEntities[_eType] = canAttack;
+    }
+
 }  

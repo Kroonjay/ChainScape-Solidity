@@ -25,11 +25,6 @@ contract Item {
         
     }
     
-    modifier isUnidentified() {
-        require(!isIdentified, "Item has Already been Identified!");
-        _;
-    }
-    
     
     constructor(EquipmentSlot _slot, ItemTier _tier) isWarden {
         slot = _slot;

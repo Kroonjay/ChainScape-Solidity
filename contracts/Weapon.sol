@@ -6,6 +6,10 @@ import "./Item.sol";
 import "./enums/EquipmentSlot.sol";
 import "./enums/WeaponType.sol";
 import "./enums/DamageType.sol";
+import "./enums/Skill.sol";
+
+import "./structs/WeaponBase.sol";
+
 
 contract Weapon is Item {
     
@@ -14,28 +18,21 @@ contract Weapon is Item {
     
     uint256 public damage;
     
-    Warden private warden;
-    
-    uint256 public itemSeed;
+    uint256 public seed;
     
     DamageType public damageType;
     
-    bool public isIdentified;
+    Skill public skill;
     
     uint256 public levelRequirement; //The skill (Strength, Sorcery, Archery) is determined based on DamageType
     
     
     constructor(ItemTier _tier, uint256 _itemSeed) Item(EquipmentSlot.Weapon, _tier) {
         owner = msg.sender;
-        warden = world;
-        isIdentified = false;
     }
     
     function setWeaponType() private isUnidentified {
         
     }
     
-    function identify() public isOwner isUnidentified {
-        
-    }
 }
