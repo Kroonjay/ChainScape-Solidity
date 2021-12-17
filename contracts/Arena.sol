@@ -9,19 +9,9 @@ import "./enums/Status.sol";
 import "./enums/Objective.sol";
 import "./enums/EntityType.sol";
 import "./structs/PlayerState.sol";
+import "./structs/Tile.sol";
 
 
-struct TileEntity {
-    Entity entity;
-    bool hasMoved;
-}
-
-
-struct Tile {
-    TileEntity[] entities;
-    uint count;
-    uint damage;
-}
 
 
 
