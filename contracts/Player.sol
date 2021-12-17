@@ -16,16 +16,14 @@ contract Player is Entity {
 
 
     event ChangedObjective(Objective oldObjective, Objective newObjective);
-    event GainedExperience(Skill skill, uint experience);
 
 
-    constructor(string _name, address _owner) Entity(_name, _owner, EntityType.Player) {
-        name = _name;
-        owner = _owner;
+    constructor(address _owner) Entity(_owner, EntityType.Player) {
+
     }
 
     function setObjective(Objective _newObjective) external isOwner {
-        emit SetObjective(objective, _newObjective);
+        emit ChangedObjective(objective, _newObjective);(objective, _newObjective);
         objective = _newObjective;
     }
 
@@ -33,5 +31,9 @@ contract Player is Entity {
         uint skillExperience = experience[_skill] + _experience;
         experience[_skill] = skillExperience;
         emit GainedExperience(_skill, _experience);
+    }
+
+    function getHash() external view returns (bytes32) {
+        return keccak256(abi.encodePacked(owner, inventory));
     }
 }

@@ -10,6 +10,7 @@ import "../enums/Status.sol";
 
 struct WeaponBase {
         uint256 seed;
+        ItemTier tier;
         DamageType damageType;
         WeaponType weaponType;
         uint256 damage;

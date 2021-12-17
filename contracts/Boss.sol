@@ -10,7 +10,7 @@ import "./Entity.sol";
 
 contract Boss is Entity {
 
-    constructor(string _name) Entity(_name, WORLD.warden, EntityType.Boss) {
+    constructor(address _owner) Entity(_owner, EntityType.Boss) {
         
     }
 }

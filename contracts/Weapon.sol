@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
-import "./Warden.sol";
 import "./Item.sol";
 import "./enums/EquipmentSlot.sol";
 import "./enums/WeaponType.sol";
@@ -18,7 +17,6 @@ contract Weapon is Item {
     
     uint256 public damage;
     
-    uint256 public seed;
     
     DamageType public damageType;
     
@@ -27,12 +25,12 @@ contract Weapon is Item {
     uint256 public levelRequirement; //The skill (Strength, Sorcery, Archery) is determined based on DamageType
     
     
-    constructor(ItemTier _tier, uint256 _itemSeed) Item(EquipmentSlot.Weapon, _tier) {
+    constructor(WeaponBase memory _weaponBase) Item(EquipmentSlot.Weapon, _weaponBase.tier) {
         owner = msg.sender;
     }
-    
-    function setWeaponType() private isUnidentified {
-        
+
+    function getHash() external view returns (bytes32) {
+        return keccak256(abi.encodePacked(owner, weaponType, damageType, damage, levelRequirement));
     }
     
 }
