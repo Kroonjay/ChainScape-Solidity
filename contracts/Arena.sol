@@ -60,10 +60,6 @@ contract Arena {
         _;
     }
 
-    modifier canOpen() {
-        require(status == Status.New, "Only New Arenas can be Opened!");
-    }
-
 
     constructor(uint _seed, uint _startTick, Boss _boss) {
         maxTicks = WORLD.arenaMaxTicks;
@@ -185,7 +181,6 @@ contract Arena {
             return true;
         }
         return false;
-        }
     }
 
     function arenaIsActive() internal view returns (bool) {

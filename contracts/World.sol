@@ -12,9 +12,6 @@ import "./enums/Skill.sol";
 import "./enums/EntityType.sol";
 import "./enums/DamageType.sol";
 
-import "./Entity.sol";
-import "./Warden.sol";
-import "./Vault.sol";
 
 contract World {
    
@@ -25,8 +22,8 @@ contract World {
    
     address public owner;
     
-    Warden public warden;
-    Vault public vault;
+    address public warden;
+    address public vault;
     
     
     uint8 public blocksPerTick; //Determines number of blocks between Game Ticks, called by Warden
@@ -129,29 +126,6 @@ contract World {
         blocksPerTick = _tickLength;
     }
 
-    function createPlayer(string _name, StarterClass _starterClass) external {
-        Player _newPlayer = new Player(_name, msg.sender, _starterClass);
-        emit PlayerCreated(_newPlayer, msg.sender, starterClass);
-    }
-
-    //function createArena()
-
-    function _hashWeapon(Weapon _weapon) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(_weapon.owner, _weapon.seed, _weapon.weaponType, _weapon.damageType, _weapon.damage, _weapon.levelRequirement));
-    }
-
-    function hashPlayer(Player _player) external pure returns (bytes32) {
-        return keccak256(abi.encodePacked(_player.owner, _player.equipment, _player.experience, _player.inventory));
-    }
-
-
-    function hashItem(Item _item) external pure returns (bytes32) {
-        if (_item.slot == EquipmentSlot.Weapon) {
-            return getWeaponHash(_item);
-        } else {
-            revert ("Item Slot Invalid or Not Yet Supported!");
-        }
-    }
 
     function updateAttackableEntity(EntityType _eType, bool canAttack) external isOwner {
         attackableEntities[_eType] = canAttack;

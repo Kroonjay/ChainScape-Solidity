@@ -34,5 +34,9 @@ contract Weapon is Item {
     function setWeaponType() private isUnidentified {
         
     }
+
+    function getHash() external view returns (bytes32) {
+        return keccak256(abi.encodePacked(owner, seed, weaponType, damageType, damage, levelRequirement));
+    }
     
 }
