@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 import "./World.sol";
 import "./Player.sol";
-import "./EntityBoss.sol";
+import "./Boss.sol";
 import "./Item.sol";
 import "./enums/Status.sol";
 import "./enums/Objective.sol";
@@ -18,7 +18,7 @@ import "./structs/Tile.sol";
 
 contract Arena {
 
-    World constant private WORLD = World(0x234234234342234);
+    World constant private WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906);
 
     address public owner;
 
@@ -28,9 +28,9 @@ contract Arena {
 
     Boss public boss;
 
-    Player[WORLD.arenaMaxPlayers] players;
+    Player[] public players;
 
-    mapping(Player => PlayerState) playerState;
+    mapping(Player => PlayerState) public playerState;
 
     uint private deadPlayerCount; //Incremented whenever a player dies in arena, used to check remaining players
 
@@ -45,13 +45,13 @@ contract Arena {
     uint private seed;
 
 
-    event StatusChanged(Status oldStatus, Status newStatus, StatusChangeDetail detail);
+    event StatusChanged(Status oldStatus, Status newStatus);
     event PlayerAdvanced(address indexed Player, Objective objective, uint oldTile, uint newTile);
-    event BossDefeated(address indexed boss);
+    event BossDefeated(Boss indexed boss);
 
 
     modifier isWarden() {
-        require(msg.sender == WORLD.warden, "Caller is Not Current Warden!");
+        require(msg.sender == WORLD.warden(), "Caller is Not Current Warden!");
         _;
     }
 
@@ -62,39 +62,40 @@ contract Arena {
 
 
     constructor(uint _seed, uint _startTick, Boss _boss) {
-        maxTicks = WORLD.arenaMaxTicks;
+        maxTicks = WORLD.arenaMaxTicks();
         seed = _seed;
         startTick = _startTick;
         boss = _boss;
     }
 
-    function setStatus(Status _newStatus, StatusChangeDetail _detail) internal {
-        emit StatusChanged(status, _newStatus, _detail);
+    function setStatus(Status _newStatus) internal {
+        emit StatusChanged(status, _newStatus);
         status = _newStatus;
     }
     
-    function handleDeadEntity(uint _tile, uint _tileIndex) internal {
+    function handleDeadEntity(Entity _entity) internal {
         //All Dead Entities should immediately be moved to the Void
+        
         _entity.moveToVoid();
-        if (_entity.eType == EntityType.Player) {
+        EntityType _eType = _entity.eType();
+        if (_eType == EntityType.Player) {
             deadPlayerCount++;
             return; //TODO Add something here to restore their health 
-        } else if (_entity.eType == EntityType.Boss) {
+        } else if (_eType == EntityType.Boss) {
             emit BossDefeated(boss);
         } else {
             revert("Failed to Handle Dead Entity - Entity Type Should Never Die!");
         }
     }
 
-    function handleCombat(uint _tile, uint _tileIndex, TileEntity _tEntity) internal {
-        //This can be negative
-        int netDamage = grid[_tile].damage - _tEntity.getDamageReduction();
-        if (netDamage < 0) {
+    function handleCombat(uint _tile, TileEntity memory _tEntity) internal {
+        //Total Tile damage less than damage reduction, entity took no damage
+        if ((grid[_tile].damage - _tEntity.entity.getDamageReduction()) < 0) {
             return;
         }
-        bool damageWasFatal = tEntity.entity.damage(grid[_tile].damage);
+        bool damageWasFatal = _tEntity.entity.damage(grid[_tile].damage);
         if (damageWasFatal) {
-            handleDeadEntity(_tile, _tileIndex);
+            handleDeadEntity(_tEntity.entity);
         }
         return;
     }
@@ -112,25 +113,22 @@ contract Arena {
 
 
     function advancePlayer(Player _player) internal {
-        uint oldTile = _player.tile;
-        if (_player.objective == Objective.Boss) {
-            _player.moveTowards(boss.tile);
-        } else if (_player.objective == Objective.Wait) {
+        if (_player.objective() == Objective.Boss) {
+            _player.moveTowards(boss.tile(), gridRows);
+        } else if (_player.objective() == Objective.Camp) {
             return; //TODO Do something here
         } else {
             revert("Failed to Advance Player - Unknown Objective");
         }
-        uint newTile = _player.tile;
-        //emit PlayerAdvanced(_player, _player.objective, oldTile, newTile);
     }
 
 
-    function updateStatus() internal {
+    function updateStatus(uint _tickNumber) internal {
         if (canOpen()) {
             setStatus(Status.Open);
-        } else if (canStart()) {
+        } else if (canStart(_tickNumber)) {
             setStatus(Status.Active);
-        } else if(canComplete()) {
+        } else if(canComplete(_tickNumber)) {
             setStatus(Status.Complete);
         }
     }
@@ -140,8 +138,6 @@ contract Arena {
             open();
         } else if (status == Status.Active) {
             advance();
-        } else if (status == Status.Complete) {
-            warden.closeArena();
         }
     }
 
@@ -152,33 +148,22 @@ contract Arena {
         return false;
     }
 
-    function canStart() internal view returns (bool) {
+    function canStart(uint _tickNumber) internal view returns (bool) {
         if (status == Status.Open) {
-            if ((startTick - 1) > warden.tick) {
+            if ((startTick - 1) > _tickNumber) {
                 return true;
             }
         }
         return false;
     }
 
-    function canComplete() internal view returns (bool) {
+    function canComplete(uint _tickNumber) internal view returns (bool) {
         if (status == Status.Active) {
             if (players.length - deadPlayerCount < 2) {
                 return true;
-            } else if (warden.tick > (startTick + maxTicks)) {
+            } else if (_tickNumber > (startTick + maxTicks)) {
                 return true;
             }
-        }
-        return false;
-    }
-
-
-    //Check for arena-ending conditions, update status if found
-    function arenaIsComplete() internal view returns (bool) {
-        if (players.length - deadPlayerCount < 2) {
-            return true;
-        } else if (warden.tick > (startTick + maxTicks)) {
-            return true;
         }
         return false;
     }
@@ -193,7 +178,7 @@ contract Arena {
 
 
     //Don't Update Tile 0 (Home / Death Tile)
-    function advance() external isWarden {
+    function advance() internal {
         for (uint i = 1; i < (grid.length - 1); i++) {
             bool tileWasUpdated = updateTile(i);
             if (tileWasUpdated) {
@@ -202,7 +187,7 @@ contract Arena {
         }
     }
 
-    function open() external isWarden canOpen {
+    function open() internal {
         spawnEntity(boss);
     }
 
@@ -211,8 +196,8 @@ contract Arena {
         setStatus(Status.Closed);
     }
 
-    function tick() external isWarden {
-        updateStatus();
+    function tick(uint _tickNumber) external isWarden {
+        updateStatus(_tickNumber);
         handleStatus();
     }
 
@@ -221,23 +206,22 @@ contract Arena {
         //Ignore blank tiles
         uint activeEntities;
         uint damage;
-        if (!grid[tile].entities.length) {
+        if (grid[_tile].entities.length == 0) {
             return false; //Allows us to skip execution of tiles with no data
         } else {
-            for (int i = 0; i < grid[tile].entities.length; i++) {
-                TileEntity tEntity = grid[tile].entities[i];
+            for (uint i = 0; i < grid[_tile].entities.length; i++) {
                 //Ignore entities which have already been moved
-                if (tEntity.hasMoved) {
+                if (grid[_tile].entities[i].hasMoved) {
                     continue; //Tile contains a single entity that has moved elsewhere
                 //Entity Moved after last grid update
-                } else if (_tile != tEntity.entity.tile) {
+                } else if (_tile != grid[_tile].entities[i].entity.tile()) {
                     grid[_tile].entities[i].hasMoved = true;
                 //Entity Died after last grid update
-                } else if (!tEntity.entity.isAlive()) {
-                    handleDeadEntity(_tile, i);
+                } else if (!grid[_tile].entities[i].entity.isAlive()) {
+                    handleDeadEntity(grid[_tile].entities[i].entity);
                 } else {
                     activeEntities++;
-                    damage += tEntity.entity.getDamageOutput();
+                    damage += grid[_tile].entities[i].entity.getDamageOutput();
                 }
             }
         }
@@ -249,23 +233,35 @@ contract Arena {
     function executeTile(uint _tile) internal {
         bool entityCanAdvance;
         //Ignore tiles with no Active Entities
-        if (!grid[_tile].activeEntities) {
+        if (grid[_tile].count == 0) {
             return;
         }
-        if (grid[_tile].activeEntities == 1) {
+        if (grid[_tile].count == 1) {
             entityCanAdvance = true;
         }
 
         for (uint i = 0; i < grid[_tile].entities.length; i++) {
-            TileEntity tEntity = grid[tile].entities[i];
             //Ignore  entities which have already been moved
-            if (tEntity.hasMoved) {
+            if (grid[_tile].entities[i].hasMoved) {
                 continue;
             } else if (entityCanAdvance) {
                 continue; //Only one Active Entity on this tile, allow it to advance
             } else {
-                handleCombat(_tile, i, tEntity);
+                handleCombat(_tile, grid[_tile].entities[i]);
             }
         }
+    }
+
+    function playerCount() public view returns (uint) {
+        return players.length;
+    }
+
+    function playerRewardCount(Player _player) public view returns (uint) {
+        return playerState[_player].itemRewards.length;
+    }
+
+    function playerRewardItem(Player _player, uint _index) public view returns (Item) {
+        require(this.playerRewardCount(_player) > _index, "Index is Invalid");
+        return playerState[_player].itemRewards[_index];
     }
 }

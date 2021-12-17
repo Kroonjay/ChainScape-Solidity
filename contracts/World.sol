@@ -30,9 +30,11 @@ contract World {
     
     uint256 starterExperience;
     
-    uint32 levelMod = 1000000;
+    uint32 public levelMod = 1000000;
 
-    uint256 private baseWeaponDamage;
+    uint256 public baseWeaponDamage;
+
+    uint public damageMaxRange;
 
     uint256 public baseDamageReduction;
 
