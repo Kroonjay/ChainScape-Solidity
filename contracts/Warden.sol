@@ -22,7 +22,7 @@ contract Warden {
 
     uint256 public tickBlockHeight;
 
-    uint256 public tick;
+    uint256 public tickNumber;
     
     uint256 private seed;
     uint256 private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
@@ -86,7 +86,7 @@ contract Warden {
     constructor(uint256 _seed) {
         owner = msg.sender;
         worldAddress = owner; //TODO Hard-Code World Address
-        tick = 1; //Increment our tick
+        tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
         seed = _seed;
     }
@@ -162,14 +162,13 @@ contract Warden {
 
 
     function handleArena(Arena _arena) internal returns (bool arenaCanAdvance) {
-        Status arenaStatus = arena.status;
-        if (arenaStatus == Status.Active) {
+        if (arena.status == Status.Active) {
             arena.advance();
             arenaCanAdvance = true;
         //Arena hit an Exit condition, Close it
-        } else if (arenaStatus == Status.Complete) {
+        } else if (arena.status == Status.Complete) {
             closeArena(_arena);            
-        } else if (arenaStatus == Status.Closed) {
+        } else if (arena.status == Status.Closed) {
             delete activeArenas[i];
         } else {
             revert ("Failed to Handle Arena - Unsupported Status!");
@@ -177,9 +176,9 @@ contract Warden {
     }
 
     function handleActiveArenas() internal returns (uint advancableArenas) {
-        uint advancableArenas;
         for (uint i = 0; i < activeArenas.length; i++){
             activeArenas[i].tick();
+            advancableArenas++;
         }
     }
 
@@ -192,14 +191,14 @@ contract Warden {
     function tick(uint256 _seed) external isOwner isNextTick {
         tickBlockHeight = block.number;
         seed = _seed;
-        tick++;
+        tickNumber++;
         uint advancableArenas = handleActiveArenas();
-        emit GameTick(tick, tickBlockHeight, advancableArenas);
+        emit GameTick(tickNumber, tickBlockHeight, advancableArenas);
     }
 
     function createArena(string _bossName) external {
         Arena arena = new Arena(getArenaSeed(), WORLD.arenaMaxTicks);
         Boss arenaBoss = new Boss(_bossName);
-        arena.open(arenaBoss, tick+1);
+        arena.open(arenaBoss, tickNumber+1);
     }
 }

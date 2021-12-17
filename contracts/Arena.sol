@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 import "./World.sol";
 import "./Player.sol";
-import "./Boss.sol";
+import "./EntityBoss.sol";
 import "./Item.sol";
 import "./enums/Status.sol";
 import "./enums/Objective.sol";
@@ -194,10 +194,10 @@ contract Arena {
 
     //Don't Update Tile 0 (Home / Death Tile)
     function advance() external isWarden {
-        for (uint tile = 1; tile < (grid.length - 1); tile++) {
-            bool tileWasUpdated = updateTile(tile);
+        for (uint i = 1; i < (grid.length - 1); i++) {
+            bool tileWasUpdated = updateTile(i);
             if (tileWasUpdated) {
-                executeTile(tile);
+                executeTile(i);
             }
         }
     }

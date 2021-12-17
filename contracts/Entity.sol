@@ -93,10 +93,10 @@ contract Entity {
     
     
     //All Players must be created by World contract, caller of World's createPlayer function is passed in.  
-    constructor(string _name, address _owner,  EntityType _type) {
+    constructor(string _name,  EntityType _type) {
         require(msg.sender == WORLD, "Only the World Contract can Call this function!");
         name = _name;
-        owner = _owner;
+        owner = msg.sender;
         eType = _type;
         emit EntityCreated(owner, name, eType);
     }

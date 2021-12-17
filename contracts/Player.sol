@@ -20,8 +20,7 @@ contract Player is Entity {
 
 
     constructor(string _name, address _owner) Entity(_name, _owner, EntityType.Player) {
-        name = _name;
-        owner = _owner;
+
     }
 
     function setObjective(Objective _newObjective) external isOwner {
