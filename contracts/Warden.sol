@@ -10,10 +10,12 @@ import "./Vault.sol";
 import "./enums/Status.sol";
 import "./enums/ItemTier.sol";
 import "./structs/PlayerState.sol";
-
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Warden {
     
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     event GameTick(uint256 indexed tickNumber, uint256 indexed tickBlockHeight, uint advancableArenas);
     
     address public worldAddress;
@@ -29,7 +31,7 @@ contract Warden {
     uint256 private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
     uint256 private arenaNonce;
 
-    Arena[] private activeArenas;
+    EnumerableSet.AddressSet private arenas;
 
    
 
@@ -133,10 +135,21 @@ contract Warden {
         _arena.close();
     }
 
-    function handleActiveArenas(uint _seed) internal returns (uint advancableArenas) {
-        for (uint i = 0; i < activeArenas.length; i++){
-            activeArenas[i].tick(_seed);
-            advancableArenas++;
+    function handleArena(address _arena) internal {
+        Arena arena = Arena(_arena);
+        Status arenaStatus = arena.status();
+        if (arenaStatus == Status.Complete) {
+            arena.close();
+        } else if (arenaStatus == Status.Closed) {
+            arenas.remove(_arena);
+        } else {
+            arena.tick(seed);
+        }
+    }
+
+    function handleArenas(uint _seed) internal {
+        for (uint i = 0; i < arenas.length(); i++){
+            handleArena(arenas.at(i));
         }
     }
 
@@ -148,11 +161,16 @@ contract Warden {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;
-        uint advancableArenas = handleActiveArenas(_seed);
-        emit GameTick(tickNumber, tickBlockHeight, advancableArenas);
+        handleArenas(_seed);
+        emit GameTick(tickNumber, tickBlockHeight, arenas.length());
     }
 
     function createArena(Boss _boss) external {
-        new Arena(getArenaSeed(), tickNumber + 1, _boss);
+        Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1, _boss);
+        arenas.add(address(_newArena));
+    }
+
+    function getArenas() external view isOwner returns (address[] memory) {
+        return arenas.values();
     }
 }
