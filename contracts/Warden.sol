@@ -33,10 +33,6 @@ contract Warden {
 
     EnumerableSet.AddressSet private arenas;
 
-   
-
-    mapping(Arena => Status) private arenaStatus; //A mapping of Arena addresses to hashes of important arena attributes, anti-cheat and model validation mechanism
-
     mapping(Player => bytes32) private players; //A hash of all important player attributes, anti-cheat mechanism
 
     mapping(Item => bytes32) private items; //A hash of all important item attributes, anti-cheat and model validation mechanism
@@ -147,7 +143,7 @@ contract Warden {
         }
     }
 
-    function handleArenas(uint _seed) internal {
+    function handleArenas() internal {
         for (uint i = 0; i < arenas.length(); i++){
             handleArena(arenas.at(i));
         }
