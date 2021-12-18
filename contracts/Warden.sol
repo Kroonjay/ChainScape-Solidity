@@ -157,7 +157,7 @@ contract Warden {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;
-        handleArenas(_seed);
+        handleArenas();
         emit GameTick(tickNumber, tickBlockHeight, arenas.length());
     }
 
