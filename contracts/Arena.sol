@@ -267,8 +267,4 @@ contract Arena {
         require(this.playerRewardCount(_player) > _index, "Index is Invalid");
         return playerState[_player].itemRewards[_index];
     }
-
-    function tier() public view returns (ItemTier arenaTier) {
-        return tier;
-    }
 }
