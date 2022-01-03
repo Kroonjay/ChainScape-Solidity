@@ -22,6 +22,8 @@ contract Arena {
 
     address public owner;
 
+    ItemTier public tier;
+
     uint public gridRows;
 
     uint public gridColumns;
@@ -66,10 +68,11 @@ contract Arena {
     }
 
 
-    constructor(uint _seed, uint _startTick) {
+    constructor(uint _seed, uint _startTick, ItemTier _tier) {
         maxTicks = WORLD.arenaMaxTicks();
         seed = _seed;
         startTick = _startTick;
+        tier = _tier;
     }
 
     function setStatus(Status _newStatus) internal {
