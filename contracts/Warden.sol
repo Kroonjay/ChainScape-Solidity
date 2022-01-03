@@ -119,26 +119,7 @@ contract Warden {
         _arena.close();
     }
 
-    function handleArena(address _arena) internal {
-        Arena arena = Arena(_arena);
-        Status arenaStatus = arena.status();
-        if (arenaStatus == Status.New) {
-            Boss arenaBoss = this.createBoss(arena.tier());
-            arena.open(arenaBoss);
-        } else if (arenaStatus == Status.Complete) {
-            arena.close();
-        } else if (arenaStatus == Status.Closed) {
-            arenas.remove(_arena);
-        } else {
-            arena.tick(tickNumber);
-        }
-    }
-
-    function handleArenas() internal {
-        for (uint i = 0; i < arenas.length(); i++){
-            handleArena(arenas.at(i));
-        }
-    }
+    
 
     function grantExperienceReward(Player _player, Skill _skill, uint256 _experience) external isCompletedArena {
         _player.receiveExperience(_skill, _experience);
@@ -179,5 +160,26 @@ contract Warden {
     function createPlayer() external returns (address _newPlayerAddress) {
         Player _newPlayer = new Player(msg.sender);
         _newPlayerAddress = address(_newPlayer);
+    }
+
+    function handleArena(address _arena) internal {
+        Arena arena = Arena(_arena);
+        Status arenaStatus = arena.status();
+        if (arenaStatus == Status.New) {
+            Boss arenaBoss = this.createBoss(arena);
+            arena.open(arenaBoss);
+        } else if (arenaStatus == Status.Complete) {
+            arena.close();
+        } else if (arenaStatus == Status.Closed) {
+            arenas.remove(_arena);
+        } else {
+            arena.tick(tickNumber);
+        }
+    }
+
+    function handleArenas() internal {
+        for (uint i = 0; i < arenas.length(); i++){
+            handleArena(arenas.at(i));
+        }
     }
 }
