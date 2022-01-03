@@ -33,8 +33,6 @@ contract Warden {
 
     EnumerableSet.AddressSet private arenas;
 
-    mapping(Player => bytes32) private players; //A hash of all important player attributes, anti-cheat mechanism
-
     mapping(Item => bytes32) private items; //A hash of all important item attributes, anti-cheat and model validation mechanism
 
 
@@ -75,11 +73,6 @@ contract Warden {
         _;
     }
 
-    modifier isValidPlayer(Player _player) {
-        bytes32 validHash = players[_player];
-        require(validHash != 0, "Address is Not a Familiar Player!"); //Don't bother trying to calculate a new hash if the address isn't found
-        _;
-    }
    
     //To be Called by World Contract
     constructor(uint256 _seed) {
@@ -89,12 +82,6 @@ contract Warden {
         tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
         seed = _seed;
-    }
-
-    function playerIsValid(Player _player) external view returns (bool isValid) {
-        if (players[_player] == 0) {
-            return isValid; //Player is Not Found in Mapping
-        }
     }
     
 
