@@ -5,7 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./World.sol";
 
 import "./enums/EquipmentSlot.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
+import "./enums/ItemTier.sol";
 
 contract Item {
     
