@@ -23,7 +23,7 @@ contract Arena {
 
     address public owner;
 
-    ItemTier public tier;
+    ItemTier public arenaTier;
 
     uint public gridRows;
 
@@ -73,7 +73,7 @@ contract Arena {
         maxTicks = WORLD.arenaMaxTicks();
         seed = _seed;
         startTick = _startTick;
-        tier = _tier;
+        arenaTier = _tier;
     }
 
     function setStatus(Status _newStatus) internal {
