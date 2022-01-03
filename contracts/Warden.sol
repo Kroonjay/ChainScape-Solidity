@@ -179,8 +179,8 @@ contract Warden {
         }
     }
 
-    function createArena(Boss _boss) external returns (address _newArenaAddress) {
-        Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1);
+    function createArena(ItemTier _tier) external returns (address _newArenaAddress) {
+        Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1, _tier);
         _newArenaAddress = address(_newArena);
         arenas.add(_newArenaAddress);
     }
