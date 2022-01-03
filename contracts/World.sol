@@ -41,6 +41,8 @@ contract World {
     uint public experiencePerHit;
 
     uint public arenaMaxTicks;
+
+    uint public inventorySlots;
     
     mapping (StarterClass => Equipment) starterEquipmentMapping;
     
@@ -147,6 +149,10 @@ contract World {
 
     function setArenaMaxTicks(uint _ticks) external isOwner {
         arenaMaxTicks = _ticks;
+    }
+
+    function setInventorySlots(uint _slots) external isOwner {
+        inventorySlots = _slots;
     }
 
     function updateAttackableEntity(EntityType _eType, bool canAttack) external isOwner {
