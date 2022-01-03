@@ -2,14 +2,14 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Arena.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Player.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Vault.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/PlayerState.sol";
+import "./World.sol";
+import "./Arena.sol";
+import "./Player.sol";
+import "./Boss.sol";
+import "./Vault.sol";
+import "./enums/Status.sol";
+import "./enums/ItemTier.sol";
+import "./structs/PlayerState.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Warden {

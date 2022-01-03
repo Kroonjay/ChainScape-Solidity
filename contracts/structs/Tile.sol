@@ -2,7 +2,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Entity.sol";
+import "../Entity.sol";
 
 
 struct TileEntity {

@@ -1,16 +1,16 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Player.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Item.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Objective.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/PlayerState.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Tile.sol";
+import "./World.sol";
+import "./Player.sol";
+import "./Boss.sol";
+import "./Item.sol";
+import "./enums/Status.sol";
+import "./enums/Objective.sol";
+import "./enums/EntityType.sol";
+import "./enums/ItemTier.sol";
+import "./structs/PlayerState.sol";
+import "./structs/Tile.sol";
 
 
 
@@ -21,9 +21,9 @@ contract Arena {
 
     World constant private WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906);
 
-    address public owner;
+    ItemTier public tier;
 
-    ItemTier public arenaTier;
+    address public owner;
 
     uint public gridRows;
 
@@ -73,7 +73,7 @@ contract Arena {
         maxTicks = WORLD.arenaMaxTicks();
         seed = _seed;
         startTick = _startTick;
-        arenaTier = _tier;
+        tier = _tier;
     }
 
     function setStatus(Status _newStatus) internal {

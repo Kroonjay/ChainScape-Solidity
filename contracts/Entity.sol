@@ -1,18 +1,18 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Item.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Weapon.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Equipment.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Experience.sol";
+import "./World.sol";
+import "./Item.sol";
+import "./Weapon.sol";
+import "./structs/Equipment.sol";
+import "./structs/Experience.sol";
 
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/StarterClass.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EquipmentSlot.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Skill.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Objective.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
-import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
+import "./enums/StarterClass.sol";
+import "./enums/EquipmentSlot.sol";
+import "./enums/Skill.sol";
+import "./enums/Objective.sol";
+import "./enums/EntityType.sol";
+import "./enums/Status.sol";
 
 contract Entity {
 
