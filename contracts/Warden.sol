@@ -18,8 +18,8 @@ contract Warden {
 
     event GameTick(uint256 indexed tickNumber, uint256 indexed tickBlockHeight, uint advancableArenas);
     
-    address public worldAddress;
-    World public WORLD = World(worldAddress);
+    address public immutable worldAddress;
+    World public immutable WORLD;
     
     address public owner;
 
@@ -45,7 +45,7 @@ contract Warden {
         // This used to consume all gas in old EVM versions, but not anymore.
         // It is often a good idea to use 'require' to check if functions are called correctly.
         // As a second argument, you can also provide an explanation about what went wrong.
-        require(msg.sender == owner, "Caller is not owner");
+        require(msg.sender == WORLD.owner(), "Caller is not World Owner");
         _;
     }
     
@@ -85,6 +85,7 @@ contract Warden {
     constructor(uint256 _seed) {
         owner = msg.sender;
         worldAddress = owner; //TODO Hard-Code World Address
+        WORLD = World(worldAddress);
         tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
         seed = _seed;
