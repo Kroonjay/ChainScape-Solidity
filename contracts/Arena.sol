@@ -8,6 +8,7 @@ import "./Item.sol";
 import "./enums/Status.sol";
 import "./enums/Objective.sol";
 import "./enums/EntityType.sol";
+import "./enums/ItemTier.sol";
 import "./structs/PlayerState.sol";
 import "./structs/Tile.sol";
 
