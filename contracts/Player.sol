@@ -2,11 +2,11 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-import "./Entity.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Entity.sol";
 
-import "./enums/EntityType.sol";
-import "./enums/Objective.sol";
-import "./enums/Skill.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Objective.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Skill.sol";
 
 
 

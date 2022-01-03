@@ -2,15 +2,15 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "./World.sol";
-import "./Item.sol";
-import "./Weapon.sol";
-import "./Boss.sol";
-import "./enums/DamageType.sol";
-import "./enums/WeaponType.sol";
-import "./enums/ItemTier.sol";
-import "./enums/EquipmentSlot.sol";
-import "./structs/WeaponBase.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Item.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Weapon.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/DamageType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/WeaponType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EquipmentSlot.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/WeaponBase.sol";
 
 
 contract Vault {

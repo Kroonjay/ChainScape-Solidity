@@ -2,11 +2,11 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "../enums/DamageType.sol";
-import "../enums/WeaponType.sol";
-import "../enums/ItemTier.sol";
-import "../enums/EquipmentSlot.sol";
-import "../enums/Status.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/DamageType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/WeaponType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EquipmentSlot.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
 
 struct WeaponBase {
         uint256 seed;

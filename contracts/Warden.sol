@@ -8,7 +8,7 @@ import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Pl
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Vault.sol";
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
-import "./enums/ItemTier.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/PlayerState.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
