@@ -10,7 +10,15 @@ import "./Entity.sol";
 
 contract Boss is Entity {
 
-    constructor(address _owner) Entity(_owner, EntityType.Boss) {
-        
+    ItemTier public tier;
+    uint public seed;
+
+    constructor(ItemTier _tier, uint _seed) Entity(WORLD.warden(), EntityType.Boss) {
+        tier = _tier;
+        seed = _seed;
     }
+
+    
+
+
 }

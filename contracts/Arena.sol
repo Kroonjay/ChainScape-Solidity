@@ -22,6 +22,8 @@ contract Arena {
 
     address public owner;
 
+    ItemTier public tier;
+
     uint public gridRows;
 
     uint public gridColumns;
@@ -60,12 +62,17 @@ contract Arena {
         _;
     }
 
+    modifier isNew() {
+        require(status == Status.New, "Arena is Not New!");
+        _;
+    }
 
-    constructor(uint _seed, uint _startTick, Boss _boss) {
+
+    constructor(uint _seed, uint _startTick, ItemTier _tier) {
         maxTicks = WORLD.arenaMaxTicks();
         seed = _seed;
         startTick = _startTick;
-        boss = _boss;
+        tier = _tier;
     }
 
     function setStatus(Status _newStatus) internal {
@@ -90,7 +97,7 @@ contract Arena {
 
     function handleCombat(uint _tile, TileEntity memory _tEntity) internal {
         //Total Tile damage less than damage reduction, entity took no damage
-        if ((grid[_tile].damage - _tEntity.entity.getDamageReduction()) < 0) {
+        if ((grid[_tile].damage - (_tEntity.entity.getDamageOutput() + _tEntity.entity.getDamageReduction())) < 0) {
             return;
         }
         bool damageWasFatal = _tEntity.entity.damage(grid[_tile].damage);
@@ -124,9 +131,7 @@ contract Arena {
 
 
     function updateStatus(uint _tickNumber) internal {
-        if (canOpen()) {
-            setStatus(Status.Open);
-        } else if (canStart(_tickNumber)) {
+        if (canStart(_tickNumber)) {
             setStatus(Status.Active);
         } else if(canComplete(_tickNumber)) {
             setStatus(Status.Complete);
@@ -134,19 +139,11 @@ contract Arena {
     }
 
     function handleStatus() internal {
-        if (status == Status.Open) {
-            open();
-        } else if (status == Status.Active) {
+        if (status == Status.Active) {
             advance();
         }
     }
 
-    function canOpen() internal view returns (bool) {
-        if (status == Status.New) {
-            return true;
-        }
-        return false;
-    }
 
     function canStart(uint _tickNumber) internal view returns (bool) {
         if (status == Status.Open) {
@@ -187,8 +184,13 @@ contract Arena {
         }
     }
 
-    function open() internal {
+    function open(Boss _boss) external isWarden isNew {
+        if (_boss.arena() != address(this)){
+            revert("Boss Arena Mismatch!");
+        }
+        boss = _boss;
         spawnEntity(boss);
+        setStatus(Status.Open);
     }
 
     function close() external isWarden {

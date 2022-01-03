@@ -2,22 +2,24 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "./World.sol";
-import "./Arena.sol";
-import "./Player.sol";
-import "./Boss.sol";
-import "./Vault.sol";
-import "./enums/Status.sol";
-import "./enums/ItemTier.sol";
-import "./structs/PlayerState.sol";
-
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Arena.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Player.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Vault.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/PlayerState.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Warden {
     
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     event GameTick(uint256 indexed tickNumber, uint256 indexed tickBlockHeight, uint advancableArenas);
     
-    address public worldAddress;
-    World public WORLD = World(worldAddress);
+    address public immutable worldAddress;
+    World public immutable WORLD;
     
     address public owner;
 
@@ -29,11 +31,7 @@ contract Warden {
     uint256 private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
     uint256 private arenaNonce;
 
-    Arena[] private activeArenas;
-
-   
-
-    mapping(Arena => Status) private arenaStatus; //A mapping of Arena addresses to hashes of important arena attributes, anti-cheat and model validation mechanism
+    EnumerableSet.AddressSet private arenas;
 
     mapping(Player => bytes32) private players; //A hash of all important player attributes, anti-cheat mechanism
 
@@ -47,7 +45,7 @@ contract Warden {
         // This used to consume all gas in old EVM versions, but not anymore.
         // It is often a good idea to use 'require' to check if functions are called correctly.
         // As a second argument, you can also provide an explanation about what went wrong.
-        require(msg.sender == owner, "Caller is not owner");
+        require(msg.sender == WORLD.owner(), "Caller is not World Owner");
         _;
     }
     
@@ -87,6 +85,7 @@ contract Warden {
     constructor(uint256 _seed) {
         owner = msg.sender;
         worldAddress = owner; //TODO Hard-Code World Address
+        WORLD = World(worldAddress);
         tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
         seed = _seed;
@@ -133,10 +132,24 @@ contract Warden {
         _arena.close();
     }
 
-    function handleActiveArenas(uint _seed) internal returns (uint advancableArenas) {
-        for (uint i = 0; i < activeArenas.length; i++){
-            activeArenas[i].tick(_seed);
-            advancableArenas++;
+    function handleArena(address _arena) internal {
+        Arena arena = Arena(_arena);
+        Status arenaStatus = arena.status();
+        if (arenaStatus == Status.New) {
+            Boss arenaBoss = this.createBoss(arena.tier());
+            arena.open(arenaBoss);
+        } else if (arenaStatus == Status.Complete) {
+            arena.close();
+        } else if (arenaStatus == Status.Closed) {
+            arenas.remove(_arena);
+        } else {
+            arena.tick(tickNumber);
+        }
+    }
+
+    function handleArenas() internal {
+        for (uint i = 0; i < arenas.length(); i++){
+            handleArena(arenas.at(i));
         }
     }
 
@@ -148,11 +161,36 @@ contract Warden {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;
-        uint advancableArenas = handleActiveArenas(_seed);
-        emit GameTick(tickNumber, tickBlockHeight, advancableArenas);
+        handleArenas();
+        emit GameTick(tickNumber, tickBlockHeight, arenas.length());
     }
 
-    function createArena(Boss _boss) external {
-        new Arena(getArenaSeed(), tickNumber + 1, _boss);
+    function createBoss(Arena _arena) internal returns (Boss _newBoss) {
+        _newBoss = new Boss(_arena.tier(), seed);
+        Vault vault = Vault(WORLD.vault());
+        for (uint i = 0; i < WORLD.inventorySlots(); i++){
+            _newBoss.addItemToInventory(vault.generateReward(_arena.tier(), seed));
+        }
+        _newBoss.setArena(_arena);
+        if (_newBoss.arena == address(_arena)) {
+            return _newBoss;
+        } else {
+            revert("Failed to Create Boss - Arena Mismatch!");
+        }
+    }
+
+    function createArena(Boss _boss) external returns (address _newArenaAddress) {
+        Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1);
+        _newArenaAddress = address(_newArena);
+        arenas.add(_newArenaAddress);
+    }
+
+    function getArenas() external view isOwner returns (address[] memory) {
+        return arenas.values();
+    }
+
+    function createPlayer() external returns (address _newPlayerAddress) {
+        Player _newPlayer = new Player(msg.sender);
+        _newPlayerAddress = address(_newPlayer);
     }
 }

@@ -5,6 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./World.sol";
 import "./Item.sol";
 import "./Weapon.sol";
+import "./Boss.sol";
 import "./enums/DamageType.sol";
 import "./enums/WeaponType.sol";
 import "./enums/ItemTier.sol";
@@ -27,6 +28,8 @@ contract Vault {
     mapping(ItemTier =>mapping(EquipmentSlot => uint16)) private vaultCounter;
     
     mapping(ItemTier =>mapping(EquipmentSlot => Item[])) private commonItems; //Common Items are pre-generated and can be shared among users.  All common items should be owned by the current warden.  
+
+    mapping(ItemTier => Boss[]) public bosses;
 
 
     string[] public arcaneWeapons;
@@ -69,7 +72,7 @@ contract Vault {
          vaultCounter[_tier][_slot]++; //Not positive this works but we'll see
     }
     
-    function _generateDamageMod(ItemTier _tier, uint256 _seed) internal view returns (uint256) {
+    function generateDamageMod(ItemTier _tier, uint256 _seed) public view returns (uint256) {
         uint256 tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
         uint256 weaponDamageRange = tierBaseDamage / (WORLD.damageMaxRange() / 100);
         uint256 weaponDamageFactor = _seed % weaponDamageRange; //TODO Add an Event Here
@@ -101,7 +104,7 @@ contract Vault {
         uint itemCount = vaultCounter[_tier][EquipmentSlot.Weapon]; //TODO Fix this to work for more than just weapons
         uint seedIndex = mulmod(_seed, rewardNonce, itemCount);
         WeaponBase memory rewardBase = weaponBases[_tier][seedIndex];
-        rewardBase.damage = _generateDamageMod(_tier, _seed);
+        rewardBase.damage = generateDamageMod(_tier, _seed);
         return _createWeapon(rewardBase);
     }
 
@@ -112,6 +115,8 @@ contract Vault {
             return _generateCommonReward(_tier, _seed);
         }
     }
+
+    
     
     function addWeaponBase(ItemTier _tier, WeaponBase memory _weaponBase) public isOwner {
         weaponBases[_tier].push(_weaponBase);

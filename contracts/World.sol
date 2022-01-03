@@ -26,23 +26,23 @@ contract World {
     address public vault;
     
     
-    uint8 public blocksPerTick; //Determines number of blocks between Game Ticks, called by Warden
+    uint public blocksPerTick; //Determines number of blocks between Game Ticks, called by Warden
     
-    uint256 starterExperience;
+    uint starterExperience;
     
-    uint32 public levelMod = 1000000;
+    uint public levelMod;
 
-    uint256 public baseWeaponDamage;
+    uint public baseWeaponDamage;
 
     uint public damageMaxRange;
 
-    uint256 public baseDamageReduction;
+    uint public baseDamageReduction;
 
     uint public experiencePerHit;
 
-    uint public arenaMaxEntities;
-
     uint public arenaMaxTicks;
+
+    uint public inventorySlots;
     
     mapping (StarterClass => Equipment) starterEquipmentMapping;
     
@@ -54,17 +54,20 @@ contract World {
 
 
     modifier isOwner() {
-        // If the first argument of 'require' evaluates to 'false', execution terminates and all
-        // changes to the state and to Ether balances are reverted.
-        // This used to consume all gas in old EVM versions, but not anymore.
-        // It is often a good idea to use 'require' to check if functions are called correctly.
-        // As a second argument, you can also provide an explanation about what went wrong.
         require(msg.sender == owner, "Caller is not owner");
         _;
     }
     
     constructor() {
        owner = msg.sender;
+       blocksPerTick = 2;
+       starterExperience = 1000000;
+       levelMod = 1000000;
+       baseWeaponDamage = 50;
+       damageMaxRange = 20;
+       baseDamageReduction = 50;
+       experiencePerHit = 1;
+       arenaMaxTicks = 100;
     }
    
     function getStarterExperience (StarterClass starterClass) external view returns (Experience memory) {
@@ -123,11 +126,34 @@ contract World {
         emit VaultSet(vault, _newVault);
         vault = _newVault;
     }
-   
-    function setTickLength(uint8 _tickLength) external isOwner {
-        blocksPerTick = _tickLength;
+
+    function setBlocksPerTick(uint _blocks) external isOwner {
+        blocksPerTick = _blocks;
     }
 
+    function setBaseWeaponDamage(uint _damage) external isOwner {
+        baseWeaponDamage = _damage;
+    }
+
+    function setDamageMaxRange(uint _range) external isOwner {
+        damageMaxRange = _range;
+    }
+
+    function setBaseDamageReduction(uint _damage) external isOwner {
+        baseDamageReduction = _damage;
+    }
+
+    function setExperiencePerHit(uint _xp) external isOwner {
+        experiencePerHit = _xp;
+    }
+
+    function setArenaMaxTicks(uint _ticks) external isOwner {
+        arenaMaxTicks = _ticks;
+    }
+
+    function setInventorySlots(uint _slots) external isOwner {
+        inventorySlots = _slots;
+    }
 
     function updateAttackableEntity(EntityType _eType, bool canAttack) external isOwner {
         attackableEntities[_eType] = canAttack;
