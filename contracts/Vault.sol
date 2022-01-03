@@ -8,7 +8,7 @@ import "./Weapon.sol";
 import "./Boss.sol";
 import "./enums/DamageType.sol";
 import "./enums/WeaponType.sol";
-import "./enums/ItemTier.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
 import "./enums/EquipmentSlot.sol";
 import "./structs/WeaponBase.sol";
 
