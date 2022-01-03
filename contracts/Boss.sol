@@ -10,11 +10,11 @@ import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/En
 
 contract Boss is Entity {
 
-    ItemTier public tier;
+    ItemTier public bossTier;
     uint public seed;
 
     constructor(ItemTier _tier, uint _seed) Entity(WORLD.warden(), EntityType.Boss) {
-        tier = _tier;
+        bossTier = _tier;
         seed = _seed;
     }
 
