@@ -2,10 +2,10 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-import "./enums/EntityType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
 
-import "./Entity.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Entity.sol";
 
 
 contract Boss is Entity {

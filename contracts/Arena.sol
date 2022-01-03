@@ -1,16 +1,16 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
-import "./World.sol";
-import "./Player.sol";
-import "./Boss.sol";
-import "./Item.sol";
-import "./enums/Status.sol";
-import "./enums/Objective.sol";
-import "./enums/EntityType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/World.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Player.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Boss.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Item.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Status.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Objective.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
 import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/ItemTier.sol";
-import "./structs/PlayerState.sol";
-import "./structs/Tile.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/PlayerState.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Tile.sol";
 
 
 

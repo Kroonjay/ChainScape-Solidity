@@ -3,14 +3,13 @@ pragma solidity >=0.7.0 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 
 
-import "./structs/Equipment.sol";
-import "./structs/Experience.sol";
-
-import "./enums/EquipmentSlot.sol";
-import "./enums/StarterClass.sol";
-import "./enums/Skill.sol";
-import "./enums/EntityType.sol";
-import "./enums/DamageType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Equipment.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/Experience.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EquipmentSlot.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/StarterClass.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Skill.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EntityType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/DamageType.sol";
 
 
 contract World {

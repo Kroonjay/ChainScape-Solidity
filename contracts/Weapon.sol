@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
-import "./Item.sol";
-import "./enums/EquipmentSlot.sol";
-import "./enums/WeaponType.sol";
-import "./enums/DamageType.sol";
-import "./enums/Skill.sol";
-
-import "./structs/WeaponBase.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/Item.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/EquipmentSlot.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/WeaponType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/DamageType.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/enums/Skill.sol";
+import "https://github.com/Kroonjay/ChainScape-Solidity/blob/master/contracts/structs/WeaponBase.sol";
 
 
 contract Weapon is Item {
