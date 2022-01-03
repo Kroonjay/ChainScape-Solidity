@@ -177,7 +177,7 @@ contract Warden {
         }
     }
 
-    function createArena(Boss _boss) external returns (address _newArena) {
+    function createArena(Boss _boss) external returns (address _newArenaAddress) {
         Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1);
         _newArenaAddress = address(_newArena);
         arenas.add(_newArenaAddress);
@@ -187,7 +187,7 @@ contract Warden {
         return arenas.values();
     }
 
-    function createPlayer() external returns (address _newPlayer) {
+    function createPlayer() external returns (address _newPlayerAddress) {
         Player _newPlayer = new Player(msg.sender);
         _newPlayerAddress = address(_newPlayer);
     }
