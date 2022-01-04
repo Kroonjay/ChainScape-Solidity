@@ -20,7 +20,7 @@ contract Warden {
     
     World public immutable WORLD;
 
-    uint256 public tickBlockHeight;
+    uint private tickBlockHeight;
 
     uint256 public tickNumber;
     
