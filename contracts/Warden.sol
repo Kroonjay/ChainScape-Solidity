@@ -51,17 +51,10 @@ contract Warden {
         _;
     }
 
-    modifier isActiveArena() {
+    modifier isArena() {
         //Checks arenaStatus of caller to ensure they're an active Arena (status == 1)
         Arena arena = Arena(msg.sender);
-        require(arena.status() == Status.Active, "Caller is Not an Active Arena!");
-        _;
-    }
-
-    modifier isCompletedArena() {
-        //Checks arenaStatus of caller to ensure they're a completed Arena, used for reward generation (status == 2)
-        Arena arena = Arena(msg.sender);
-        require(arena.status() == Status.Complete, "Caller is Not an Active Arena!");
+        require(arenas.contains(msg.sender), "Caller is Not an Arena!");
         _;
     }
    
@@ -84,14 +77,14 @@ contract Warden {
         return seed ^ arenaNonce;
     }
 
-    function grantItemReward(Player _player, ItemTier _tier) external isCompletedArena {
+    function grantItemReward(Player _player, ItemTier _tier) external isArena {
         Vault vault = Vault(WORLD.vault());
         Item rewardItem = vault.generateReward(_tier, seed);
         _player.addItemToInventory(rewardItem);
 
     }
     
-    function grantExperienceReward(Player _player, Skill _skill, uint256 _experience) external isCompletedArena {
+    function grantExperienceReward(Player _player, Skill _skill, uint256 _experience) external isArena {
         _player.receiveExperience(_skill, _experience);
     }
 
