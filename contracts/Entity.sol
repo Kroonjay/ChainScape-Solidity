@@ -32,7 +32,7 @@ contract Entity {
     uint public tile;
 
 
-    World constant public WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906);
+    World immutable public WORLD;
     
     // event for EVM logging
     event EntityCreated(address indexed owner, EntityType entityType);
@@ -75,9 +75,9 @@ contract Entity {
     uint8 public level;
     
     //All Players must be created by World contract, caller of World's createPlayer function is passed in.  
-    constructor(address _owner, EntityType _type) {
-        require(msg.sender == address(WORLD), "Only the World Contract can Call this function!");
-        owner = _owner;
+    constructor(address _world, EntityType _type) {
+        WORLD = World(_world);
+        owner = msg.sender;
         eType = _type;
         emit EntityCreated(owner, eType);
     }
