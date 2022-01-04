@@ -105,12 +105,13 @@ contract Warden {
 
     function createBoss(Arena _arena) internal returns (Boss _newBoss) {
         _newBoss = new Boss(_arena.tier(), seed);
+        address arenaAddress = address(_arena);
         Vault vault = Vault(WORLD.vault());
         for (uint i = 0; i < WORLD.inventorySlots(); i++){
             _newBoss.addItemToInventory(vault.generateReward(_arena.tier(), seed));
         }
-        _newBoss.setArena(_arena);
-        if (_newBoss.arena == address(_arena)) {
+        _newBoss.setArena(arenaAddress);
+        if (_newBoss.arena() == arenaAddress) {
             return _newBoss;
         } else {
             revert("Failed to Create Boss - Arena Mismatch!");
@@ -136,7 +137,7 @@ contract Warden {
         Arena arena = Arena(_arena);
         Status arenaStatus = arena.status();
         if (arenaStatus == Status.New) {
-            Boss arenaBoss = this.createBoss(arena);
+            Boss arenaBoss = createBoss(arena);
             arena.open(arenaBoss);
         } else if (arenaStatus == Status.Complete) {
             arena.close();
