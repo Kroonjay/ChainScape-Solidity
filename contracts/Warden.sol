@@ -104,10 +104,10 @@ contract Warden {
     }
 
     function createBoss(Arena _arena) internal returns (Boss _newBoss) {
-        _newBoss = new Boss(_arena.arenaTier(), seed);
+        _newBoss = new Boss(_arena.tier(), seed);
         Vault vault = Vault(WORLD.vault());
         for (uint i = 0; i < WORLD.inventorySlots(); i++){
-            _newBoss.addItemToInventory(vault.generateReward(_arena.arenaTier(), seed));
+            _newBoss.addItemToInventory(vault.generateReward(_arena.tier(), seed));
         }
         _newBoss.setArena(_arena);
         if (_newBoss.arena == address(_arena)) {
