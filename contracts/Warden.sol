@@ -1,185 +1,197 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
-
 import "./World.sol";
-import "./Arena.sol";
-import "./Player.sol";
-import "./Boss.sol";
-import "./Vault.sol";
+import "./Item.sol";
+import "./Weapon.sol";
+import "./structs/Equipment.sol";
+import "./structs/Experience.sol";
+
+import "./enums/StarterClass.sol";
+import "./enums/EquipmentSlot.sol";
+import "./enums/Skill.sol";
+import "./enums/Objective.sol";
+import "./enums/EntityType.sol";
 import "./enums/Status.sol";
-import "./enums/ItemTier.sol";
-import "./structs/PlayerState.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
-contract Warden {
+contract Entity {
+
+    EntityType public eType;
+
+    mapping(EquipmentSlot => Item) equipment;
+   
+    mapping(Skill => uint256) experience;
     
-    using EnumerableSet for EnumerableSet.AddressSet;
+    Item[] public inventory;
 
-    event GameTick(uint256 indexed tickNumber, uint256 indexed tickBlockHeight, uint advancableArenas);
+    uint256 public health;
+
+
+    address public arena;
+
+    uint public tile;
+
+
+    World constant public WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906);
     
-    address public immutable worldAddress;
-    World public immutable WORLD;
-    
-    address public owner;
-
-    uint256 public tickBlockHeight;
-
-    uint256 public tickNumber;
-    
-    uint256 private seed;
-    uint256 private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
-    uint256 private arenaNonce;
-
-    EnumerableSet.AddressSet private arenas;
-
-    mapping(Item => bytes32) private items; //A hash of all important item attributes, anti-cheat and model validation mechanism
-
-
+    // event for EVM logging
+    event EntityCreated(address indexed owner, EntityType entityType);
+    event AddedInventoryItem(Item indexed item);
+    event EquippedItem(EquipmentSlot indexed slot, Item indexed item);
+    event Moved(address indexed arena, uint oldTile, uint newTile);
+    event GainedExperience(Skill indexed _skill, uint amount);
+    event Death(address indexed arena, uint indexed tile);
 
     modifier isOwner() {
-        // If the first argument of 'require' evaluates to 'false', execution terminates and all
-        // changes to the state and to Ether balances are reverted.
-        // This used to consume all gas in old EVM versions, but not anymore.
-        // It is often a good idea to use 'require' to check if functions are called correctly.
-        // As a second argument, you can also provide an explanation about what went wrong.
-        require(msg.sender == WORLD.owner(), "Caller is not World Owner");
+        require(msg.sender == owner, "Caller is Not Player Owner!");
         _;
+    }
+
+    modifier isWarden() {
+        require(msg.sender == WORLD.warden(), "Caller is Not Current Warden!");
+        _;
+    }
+
+    modifier isArena() {
+        require(msg.sender == arena, "Caller is Not Current Arena!");
+        _;
+    }
+
+    modifier canAttack() {
+        require(WORLD.attackableEntities(eType), "Entity Cannot be Attacked!");
+        _;
+    }
+
+    modifier onlyIfAlive() {
+        require(isAlive(), "Entity is Not Alive!");
+        _;
+    }
+
+
+    bool public isSafe;   // if True, player cannot be attacked by others
+    
+    address public owner;
+    
+    uint8 public level;
+    
+    //All Players must be created by World contract, caller of World's createPlayer function is passed in.  
+    constructor(address _owner, EntityType _type) {
+        owner = _owner;
+        eType = _type;
+        emit EntityCreated(owner, eType);
     }
     
-    modifier isNextTick() {
-        //Checks current block height against previous tick's height + number of blocks per tick defined in World contract.  
-        uint256 nextTickHeight = tickBlockHeight + WORLD.blocksPerTick();
-        require(block.number >= nextTickHeight, "Not Ready to Advance Tick!");
-        _;
-    }
-
-    modifier isActiveArena() {
-        //Checks arenaStatus of caller to ensure they're an active Arena (status == 1)
-        Arena arena = Arena(msg.sender);
-        require(arena.status() == Status.Active, "Caller is Not an Active Arena!");
-        _;
-    }
-
-    modifier isCompletedArena() {
-        //Checks arenaStatus of caller to ensure they're a completed Arena, used for reward generation (status == 2)
-        Arena arena = Arena(msg.sender);
-        require(arena.status() == Status.Complete, "Caller is Not an Active Arena!");
-        _;
-    }
-
-    modifier isCommonItem(ItemTier _tier) {
-        require(_tier < ItemTier.Exotic, "Item Tier Must be Less than Exotic");
-        _;
-    }
-
-   
-    //To be Called by World Contract
-    constructor(uint256 _seed) {
-        owner = msg.sender;
-        worldAddress = owner; //TODO Hard-Code World Address
-        WORLD = World(worldAddress);
-        tickNumber = 1; //Increment our tick
-        tickBlockHeight = block.number; //Set tickBlockHeight to current block
-        seed = _seed;
-    }
     
-
-    function getItemSeed() internal returns (uint) {
-        itemNonce++;
-        return seed ^ itemNonce;
+    function addItemToInventory(Item _item) external isWarden {
+        inventory.push(_item);
+        emit AddedInventoryItem(_item);
     }
 
-    function getArenaSeed() internal returns (uint){
-        arenaNonce++;
-        return seed ^ arenaNonce;
+    function grantExperience(Skill _skill, uint _amount) internal {
+        experience[_skill] += _amount;
+        emit GainedExperience(_skill, _amount);
     }
 
-    function grantItemReward(Player _player, ItemTier _tier) external isCompletedArena {
-        Vault vault = Vault(WORLD.vault());
-        Item rewardItem = vault.generateReward(_tier, seed);
-        _player.addItemToInventory(rewardItem);
-
+    function getSkillLevel(Skill _skill) public view returns (uint) {
+        return experience[_skill] % WORLD.levelMod();
     }
 
-    function closeArena() external isActiveArena {
-        Arena _arena = Arena(msg.sender);
-        if (_arena.status() != Status.Complete) {
-            revert("Failed to Close Arena - Status is Not Complete");
+    function getCombatLevel() public view returns (uint) {
+        return ((experience[Skill.Strength] + experience[Skill.Sorcery] + experience[Skill.Archery]) / 3 + experience[Skill.Defense] + experience[Skill.Life]) % WORLD.levelMod();
+    }
+
+    //TODO Update this to include more than just base Life XP
+    function getMaxHealth() public view returns (uint) {
+        return experience[Skill.Life];
+    }
+
+    function isAlive() public view returns (bool) {
+        if (health > 0) {
+            return true;
+        } else {
+            return false;
         }
-        for (uint i = 0; i < _arena.playerCount(); i++) {
-            Player player = _arena.players(i);
-            player.moveToVoid();
-            for (uint j = 0; j < _arena.playerRewardCount(player); j++) {
-                
-                Item rewardItem = _arena.playerRewardItem(player, j);
-                player.addItemToInventory(rewardItem);
+    }
+
+    //TODO Level Requirements for Items currently doesn't work
+    function equipItem(uint8 _inventorySlot) public isOwner {
+        require(_inventorySlot < inventory.length, "Inventory Slot is Invalid");
+        EquipmentSlot itemSlot = inventory[_inventorySlot].slot();
+        equipment[itemSlot] = inventory[_inventorySlot];
+        emit EquippedItem(itemSlot, inventory[_inventorySlot]);
+    }
+
+
+    function setArena(address _arena) external isWarden {
+        arena = _arena;
+    }
+
+    function moveTo(uint _targetTile) external isArena {
+        emit Moved(arena, tile, _targetTile);
+        tile = _targetTile;
+    }
+
+    function moveTowards(uint _targetTile, uint _rowShift) external isArena {
+        uint newTile;
+        if (tile < _targetTile) {
+            if ((_targetTile - tile) > _rowShift) { //We can move by one row instead of one column
+                newTile = tile + (1 * _rowShift);
+            } else {
+                newTile = tile + 1; //Otherwise, simply move one column towards your objective
+            }
+        } else {
+            if ((tile - _targetTile) > _rowShift) {
+                newTile = tile -  (1 * _rowShift);
+            } else {
+                newTile = tile - 1;
             }
         }
-        _arena.close();
+        require(newTile > 0, "New Tile Value is Invalid!"); //Entities can never move to home tile
+        this.moveTo(newTile);
+    }
+
+    function moveToVoid() external isWarden {
+        this.moveTo(0);
     }
 
     
 
-    function grantExperienceReward(Player _player, Skill _skill, uint256 _experience) external isCompletedArena {
-        _player.receiveExperience(_skill, _experience);
+    //TODO Update this once we support Armor
+    function getDamageReduction() public view canAttack returns (uint) {
+        return getCombatLevel() * WORLD.baseDamageReduction();
     }
 
-    function tick(uint256 _seed) external isOwner isNextTick {
-        tickBlockHeight = block.number;
-        seed = _seed;
-        tickNumber++;
-        handleArenas();
-        emit GameTick(tickNumber, tickBlockHeight, arenas.length());
+    function getDamageOutput() public view canAttack returns (uint) {
+        Weapon weapon = Weapon(address(equipment[EquipmentSlot.Weapon]));
+        return getCombatLevel() * weapon.damage();
     }
 
-    function createBoss(Arena _arena) internal returns (Boss _newBoss) {
-        _newBoss = new Boss(_arena.arenaTier(), seed);
-        Vault vault = Vault(WORLD.vault());
-        for (uint i = 0; i < WORLD.inventorySlots(); i++){
-            _newBoss.addItemToInventory(vault.generateReward(_arena.arenaTier(), seed));
-        }
-        _newBoss.setArena(_arena);
-        if (_newBoss.arena == address(_arena)) {
-            return _newBoss;
+    function attack() external canAttack onlyIfAlive isArena {
+        Weapon weapon = Weapon(address(equipment[EquipmentSlot.Weapon]));
+        grantExperience(weapon.skill(), getDamageOutput());
+    }
+
+    function damage(uint _damageAmount) external canAttack onlyIfAlive isArena returns (bool) {
+        //Damage is Fatal
+        if (_damageAmount < health) {
+            health = 0;
+            emit Death(arena, tile);
+            return true;
         } else {
-            revert("Failed to Create Boss - Arena Mismatch!");
+            grantExperience(Skill.Life, _damageAmount);
+            grantExperience(Skill.Defense, _damageAmount);
+            health -= _damageAmount;
+            return false;
         }
     }
 
-    function createArena(ItemTier _tier) external returns (address _newArenaAddress) {
-        Arena _newArena = new Arena(getArenaSeed(), tickNumber + 1, _tier);
-        _newArenaAddress = address(_newArena);
-        arenas.add(_newArenaAddress);
-    }
-
-    function getArenas() external view isOwner returns (address[] memory) {
-        return arenas.values();
-    }
-
-    function createPlayer() external returns (address _newPlayerAddress) {
-        Player _newPlayer = new Player(msg.sender);
-        _newPlayerAddress = address(_newPlayer);
-    }
-
-    function handleArena(address _arena) internal {
-        Arena arena = Arena(_arena);
-        Status arenaStatus = arena.status();
-        if (arenaStatus == Status.New) {
-            Boss arenaBoss = this.createBoss(arena);
-            arena.open(arenaBoss);
-        } else if (arenaStatus == Status.Complete) {
-            arena.close();
-        } else if (arenaStatus == Status.Closed) {
-            arenas.remove(_arena);
+    function heal(uint _healAmount) external canAttack isArena {
+        if ((health + _healAmount) > getMaxHealth()) {
+            health = getMaxHealth();
         } else {
-            arena.tick(tickNumber);
+            health += _healAmount;
         }
     }
 
-    function handleArenas() internal {
-        for (uint i = 0; i < arenas.length(); i++){
-            handleArena(arenas.at(i));
-        }
-    }
+
 }
