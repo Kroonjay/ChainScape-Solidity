@@ -32,7 +32,7 @@ contract Entity {
     uint public tile;
 
 
-    World immutable public WORLD;
+    World immutable public WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8);
     
     // event for EVM logging
     event EntityCreated(address indexed owner, EntityType entityType);
@@ -75,9 +75,8 @@ contract Entity {
     uint8 public level;
     
     //All Players must be created by World contract, caller of World's createPlayer function is passed in.  
-    constructor(address _world, EntityType _type) {
-        WORLD = World(_world);
-        owner = msg.sender;
+    constructor(address _owner, EntityType _type) {
+        owner = _owner;
         eType = _type;
         emit EntityCreated(owner, eType);
     }
@@ -193,6 +192,4 @@ contract Entity {
             health += _healAmount;
         }
     }
-
-
 }
