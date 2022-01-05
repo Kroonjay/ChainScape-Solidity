@@ -52,11 +52,8 @@ contract World {
 
     mapping(Skill => DamageType) public skillDamageTypes;
 
-    WeaponType public weaponTypes;
 
-    DamageType public damageTypes;
 
-    
 
 
     modifier isOwner() {

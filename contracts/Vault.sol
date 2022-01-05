@@ -28,19 +28,12 @@ contract Vault {
     
     mapping(ItemTier =>mapping(EquipmentSlot => Item[])) private commonItems; //Common Items are pre-generated and can be shared among users.  All common items should be owned by the current warden.  
     
-    
-    DamageType public damageTypes;
-    
-    WeaponType public weaponTypes;
+    EnumerableSet.UintSet private weaponTypes;
 
-    
-    
-
-    
-    
+    EnumerableSet.UintSet private damageTypes; //Allow external access via values() in custom getter
     
     modifier isOwner() {
-        require(msg.sender == owner);
+        require(msg.sender == WORLD.owner());
         _;
     }
 
@@ -53,26 +46,33 @@ contract Vault {
         owner = msg.sender;
         rewardNonce = 1;
     }
+
+    function getDamageTypes() public view returns (uint[]) {
+        return damageTypes.values();
+    }
   
-    function setRewardNonce() internal {
-        rewardNonce++;
+    function getWeaponTypes() public view returns (uint[]) {
+        return weaponTypes.values();
+    }
+
+    function getWeaponType(uint _seed) public view returns (uint) {
+        uint seedIndex = _seed % weaponTypes.length();
+        return weaponTypes.at(seedIndex);
     }
     
-    function addToVaultCount(ItemTier _tier, EquipmentSlot _slot) internal {
-         vaultCounter[_tier][_slot]++; //Not positive this works but we'll see
-    }
-    
-    function generateDamageMod(ItemTier _tier, uint256 _seed) public view returns (uint256) {
+    function getDamageModifier(ItemTier _tier, uint _seed) public view returns (uint) {
         uint256 tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
         uint256 weaponDamageRange = tierBaseDamage / (WORLD.damageMaxRange() / 100);
-        uint256 weaponDamageFactor = _seed % weaponDamageRange; //TODO Add an Event Here
+        uint256 weaponDamageFactor = _seed % weaponDamageRange;
         return tierBaseDamage + weaponDamageFactor;
     }
 
-    function _createWeapon(WeaponBase memory _weaponBase) internal returns (Weapon) {
-        Weapon newWeapon = new Weapon(_weaponBase);
-        emit ItemCreated(newWeapon.tier(), EquipmentSlot.Weapon);
-        return newWeapon;
+    function addWeaponType(WeaponType _weaponType) public isOwner{
+        require(weaponTypes.add(_weaponType), "Value already Present!");
+    }
+
+    function addDamageType(DamageType _damageType) public isOwner{
+        require(damageTypes.add(_damageType), "Value already Present!");
     }
 
     function isUniqueItem(ItemTier _tier) internal pure returns (bool) {
@@ -80,41 +80,5 @@ contract Vault {
             return true;
         }
         return false;
-    }
-    
-    //Items with tiers under exotic use pre-set contracts to save gas
-    function _generateCommonReward(ItemTier _tier, uint256 _seed) internal isWarden returns (Item) {
-        uint itemCount = vaultCounter[_tier][EquipmentSlot.Weapon]; //TODO Fix this to work for more than just weapons
-        uint seedIndex = mulmod(_seed, rewardNonce, itemCount);
-        setRewardNonce();
-        return commonItems[_tier][EquipmentSlot.Weapon][seedIndex];
-    }   
-
-    function _generateUniqueReward(ItemTier _tier, uint256 _seed) internal isWarden returns (Item)  {
-        uint itemCount = vaultCounter[_tier][EquipmentSlot.Weapon]; //TODO Fix this to work for more than just weapons
-        uint seedIndex = mulmod(_seed, rewardNonce, itemCount);
-        WeaponBase memory rewardBase = weaponBases[_tier][seedIndex];
-        rewardBase.damage = generateDamageMod(_tier, _seed);
-        return _createWeapon(rewardBase);
-    }
-
-    function generateReward(ItemTier _tier, uint256 _seed) external isWarden returns (Item) {
-        if (isUniqueItem(_tier)) {
-            return _generateUniqueReward(_tier, _seed);
-        } else {
-            return _generateCommonReward(_tier, _seed);
-        }
-    }
-    
-    function addWeaponBase(ItemTier _tier, WeaponBase memory _weaponBase) public isOwner {
-        weaponBases[_tier].push(_weaponBase);
-        addToVaultCount(_tier, EquipmentSlot.Weapon); //TODO Add an Event Here
-    }
-
-    function addCommonItem(Item _item) external isOwner {
-        ItemTier _itemTier = _item.tier();
-        require(_itemTier < ItemTier.Exotic, "Item Tier Invalid, Must be Less than Exotic!"); //All Tiers < Exotic are considered "Common"
-        commonItems[_itemTier][_item.slot()].push(_item);
-        addToVaultCount(_itemTier, _item.slot());
     }
 }
