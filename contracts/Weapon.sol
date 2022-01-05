@@ -7,7 +7,7 @@ import "./enums/WeaponType.sol";
 import "./enums/DamageType.sol";
 import "./enums/Skill.sol";
 import "./structs/WeaponBase.sol";
-
+import "./Vault.sol";
 
 contract Weapon is Item {
     
@@ -30,6 +30,10 @@ contract Weapon is Item {
 
     function getHash() external view returns (bytes32) {
         return keccak256(abi.encodePacked(owner, weaponType, damageType, damage, levelRequirement));
+    }
+
+    function setWeaponType() private {
+        Vault vault = Vault(WORLD.vault());
     }
     
 }

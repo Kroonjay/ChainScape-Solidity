@@ -3,7 +3,6 @@ pragma solidity >=0.7.0 <0.9.0;
 //SPDX-License-Identifier: UNLICENSED
 
 import "./World.sol";
-import "./Item.sol";
 import "./Weapon.sol";
 import "./Boss.sol";
 import "./enums/DamageType.sol";
@@ -11,38 +10,30 @@ import "./enums/WeaponType.sol";
 import "./enums/ItemTier.sol";
 import "./enums/EquipmentSlot.sol";
 import "./structs/WeaponBase.sol";
-
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Vault {
     
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     event ItemCreated(ItemTier indexed tier, EquipmentSlot indexed slot);
     
     address public owner;
     
     World constant private WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906); //TODO Update this with Actual Contract
     
-    string[3] public damageTypes;
-    
     mapping(ItemTier => WeaponBase[]) public weaponBases;
     
     mapping(ItemTier =>mapping(EquipmentSlot => uint16)) private vaultCounter;
     
     mapping(ItemTier =>mapping(EquipmentSlot => Item[])) private commonItems; //Common Items are pre-generated and can be shared among users.  All common items should be owned by the current warden.  
+    
+    
+    DamageType public damageTypes;
+    
+    WeaponType public weaponTypes;
 
-    mapping(ItemTier => Boss[]) public bosses;
-
-
-    string[] public arcaneWeapons;
     
-    string[] public projectileWeapons;
-    
-    string[] public tiers;
-    
-    uint256 private rewardNonce;
-    
-    DamageType public damageType;
-    
-
     
 
     
@@ -58,7 +49,6 @@ contract Vault {
         _;
     }
 
-    
     constructor() {
         owner = msg.sender;
         rewardNonce = 1;
@@ -115,8 +105,6 @@ contract Vault {
             return _generateCommonReward(_tier, _seed);
         }
     }
-
-    
     
     function addWeaponBase(ItemTier _tier, WeaponBase memory _weaponBase) public isOwner {
         weaponBases[_tier].push(_weaponBase);

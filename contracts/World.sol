@@ -10,6 +10,7 @@ import "./enums/StarterClass.sol";
 import "./enums/Skill.sol";
 import "./enums/EntityType.sol";
 import "./enums/DamageType.sol";
+import "./enums/WeaponType.sol";
 
 
 contract World {
@@ -50,6 +51,12 @@ contract World {
     mapping(EntityType => bool) public attackableEntities;
 
     mapping(Skill => DamageType) public skillDamageTypes;
+
+    WeaponType public weaponTypes;
+
+    DamageType public damageTypes;
+
+    
 
 
     modifier isOwner() {
