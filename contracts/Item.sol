@@ -24,11 +24,6 @@ contract Item {
         _;
     }
 
-    modifier isZima() {
-        require(msg.sender == WORLD.owner(), "Caller is Not Zima!");
-        _;
-    }
-
     modifier isOwner() {
         require(msg.sender == owner, "Caller is Not Item Owner!");
         _;

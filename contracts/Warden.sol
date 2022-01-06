@@ -83,7 +83,7 @@ contract Warden {
         _player.receiveExperience(_skill, _experience);
     }
 
-    function tick(uint256 _seed) external isOwner isNextTick {
+    function tick(uint256 _seed) external isZima isNextTick {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;

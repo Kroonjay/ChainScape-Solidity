@@ -28,8 +28,8 @@ contract Vault {
 
     mapping(DamageType => Skill) public weaponSkillRequirements;
     
-    modifier isOwner() {
-        require(msg.sender == WORLD.owner());
+    modifier isZima() {
+        require(msg.sender == WORLD.zima());
         _;
     }
 
@@ -46,7 +46,7 @@ contract Vault {
         return weaponTypeMap[weaponTypes.at(seedIndex)];
     }
 
-    function addWeapon(WeaponType _weaponType, DamageType _damageType) public isOwner returns (bool success) {
+    function addWeapon(WeaponType _weaponType, DamageType _damageType) public isZima returns (bool success) {
         success = weaponTypes.add(uint(_weaponType));
         if(success) {
             weaponTypeMap[uint(_weaponType)] = _weaponType; //Don't update the mapping unless we have a new WeaponType
@@ -62,7 +62,7 @@ contract Vault {
         return baseDamage + damageModifier;
     }
 
-    function setWeaponSkillRequirement(DamageType _damageType, Skill _skill) public isOwner {
+    function setWeaponSkillRequirement(DamageType _damageType, Skill _skill) public isZima {
         weaponSkillRequirements[_damageType] = _skill;
     }
 
