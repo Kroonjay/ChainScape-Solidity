@@ -46,14 +46,13 @@ contract Vault {
         return weaponTypeMap[weaponTypes.at(seedIndex)];
     }
 
-    function addWeapon(WeaponType _weaponType, DamageType _damageType) public returns (bool success) {
+    function addWeapon(WeaponType _weaponType, DamageType _damageType) public isOwner returns (bool success) {
         success = weaponTypes.add(uint(_weaponType));
         if(success) {
             weaponTypeMap[uint(_weaponType)] = _weaponType; //Don't update the mapping unless we have a new WeaponType
             emit WeaponAdded(_weaponType, _damageType);
         }
         weaponDamageTypes[_weaponType] = _damageType; //Allows us to update DamageType for existing weapons
-        
     }
     
     function getWeaponDamage(ItemTier _tier, uint _seed) public view returns (uint) {
@@ -63,8 +62,8 @@ contract Vault {
         return baseDamage + damageModifier;
     }
 
-    function getWeaponSkill(DamageType _damageType) public view returns (Skill) {
-        return weaponSkillRequirements[_damageType];
+    function setWeaponSkillRequirement(DamageType _damageType, Skill _skill) public isOwner {
+         damageSkillMap[_damageType] = _skill;
     }
 
     function getLevelRequirement(ItemTier _tier) public pure returns (uint) {

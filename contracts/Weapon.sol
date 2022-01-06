@@ -35,7 +35,7 @@ contract Weapon is Item {
         weaponType = vault.getWeaponType(seed);
         damageType = vault.getDamageType(weaponType);
         damage = vault.getWeaponDamage(tier, seed);
-        skillRequirement = vault.getWeaponSkill(damageType);
+        skillRequirement = vault.weaponSkillRequirements(damageType);
         levelRequirement = vault.getLevelRequirement(tier);
     }
     
