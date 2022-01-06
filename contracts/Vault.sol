@@ -57,8 +57,8 @@ contract Vault {
         return weaponSkillRequirements[_damageType];
     }
 
-    function getLevelRequirement(ItemTier _tier) public view returns (uint) {
-        return 5 * _tier; //TODO Update this to calculate based on Seed w/ range factor like Weapon damage
+    function getLevelRequirement(ItemTier _tier) public pure returns (uint) {
+        return 5 * uint(_tier); //TODO Update this to calculate based on Seed w/ range factor like Weapon damage
     }
 
     function isUniqueItem(ItemTier _tier) internal pure returns (bool) {

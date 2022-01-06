@@ -6,7 +6,6 @@ import "./enums/EquipmentSlot.sol";
 import "./enums/WeaponType.sol";
 import "./enums/DamageType.sol";
 import "./enums/Skill.sol";
-import "./structs/WeaponBase.sol";
 import "./Vault.sol";
 
 contract Weapon is Item {
@@ -24,8 +23,7 @@ contract Weapon is Item {
     
     bool public identified;
     
-    constructor() Item(EquipmentSlot.Weapon, _weaponBase.tier) {
-        owner = msg.sender;
+    constructor(ItemTier _tier, uint _seed, address _owner) Item(EquipmentSlot.Weapon, _tier, _seed, _owner) {
     }
 
     function getHash() external view returns (bytes32) {
