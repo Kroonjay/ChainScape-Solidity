@@ -27,15 +27,6 @@ contract Vault {
         _;
     }
 
-    modifier isWarden() {
-        require(msg.sender == WORLD.warden());
-        _;
-    }
-
-    function getDamageTypes() public view returns (uint[]) {
-        return damageTypes.values();
-    }
-
     function getDamageType(WeaponType _weaponType) public view returns (uint) {
         return weaponDamageTypes[_weaponType];
     }
