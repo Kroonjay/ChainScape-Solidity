@@ -12,19 +12,19 @@ import "./Vault.sol";
 contract Weapon is Item {
     
     
-    string public weaponType;
+    WeaponType public weaponType;
     
-    uint256 public damage;
-    
+    uint public damage;
     
     DamageType public damageType;
     
-    Skill public skill;
+    Skill public skillRequirement;
     
-    uint256 public levelRequirement; //The skill (Strength, Sorcery, Archery) is determined based on DamageType
+    uint public levelRequirement; //The skill (Strength, Sorcery, Archery) is determined based on DamageType
     
+    bool public identified;
     
-    constructor(WeaponBase memory _weaponBase) Item(EquipmentSlot.Weapon, _weaponBase.tier) {
+    constructor() Item(EquipmentSlot.Weapon, _weaponBase.tier) {
         owner = msg.sender;
     }
 
@@ -32,8 +32,13 @@ contract Weapon is Item {
         return keccak256(abi.encodePacked(owner, weaponType, damageType, damage, levelRequirement));
     }
 
-    function setWeaponType() private {
+    function identify() public isOwner {
         Vault vault = Vault(WORLD.vault());
+        weaponType = vault.getWeaponType(seed);
+        damageType = vault.getDamageType(weaponType);
+        damage = vault.getWeaponDamage(tier, seed);
+        skillRequirement = vault.getWeaponSkill(damageType);
+        levelRequirement = vault.getLevelRequirement(tier);
     }
     
 }

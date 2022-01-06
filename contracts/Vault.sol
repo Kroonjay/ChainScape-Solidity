@@ -7,6 +7,7 @@ import "./enums/DamageType.sol";
 import "./enums/WeaponType.sol";
 import "./enums/ItemTier.sol";
 import "./enums/EquipmentSlot.sol";
+import "./enums/Skill.sol";
 import "./structs/WeaponBase.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
@@ -18,7 +19,9 @@ contract Vault {
     
     EnumerableSet.UintSet private weaponTypes; //Allow external access via values() in custom getter
 
-    mapping(WeaponType => DamageType) public weaponDamageTypes; 
+    mapping(WeaponType => DamageType) public weaponDamageTypes;
+
+    mapping(DamageType => Skill) public weaponSkillRequirements;
     
     modifier isOwner() {
         require(msg.sender == WORLD.owner());
@@ -48,6 +51,14 @@ contract Vault {
         uint tierDamageRange = WORLD.damageMaxRange() * uint(_tier);
         uint damageModifier = _seed % tierDamageRange;
         return baseDamage + damageModifier;
+    }
+
+    function getWeaponSkill(DamageType _damageType) public view returns (Skill) {
+        return weaponSkillRequirements[_damageType];
+    }
+
+    function getLevelRequirement(ItemTier _tier) public view returns (uint) {
+        return 5 * _tier; //TODO Update this to calculate based on Seed w/ range factor like Weapon damage
     }
 
     function isUniqueItem(ItemTier _tier) internal pure returns (bool) {
