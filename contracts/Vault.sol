@@ -43,12 +43,11 @@ contract Vault {
         weaponDamageTypes[_weaponType] = _damageType;
     }
     
-    function getDamageModifier(ItemTier _tier, int _seed) public view returns (uint) {
-        uint tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
-        int weaponDamageRange = int(tierBaseDamage / (WORLD.damageMaxRange() / 100));
-        int weaponDamageFactor = int(_seed % weaponDamageRange);
-        int damageModifier = int(tierBaseDamage) + weaponDamageFactor;
-        return uint(damageModifier);
+    function getWeaponDamage(ItemTier _tier, uint _seed) public view returns (uint) {
+        uint baseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
+        uint tierDamageRange = WORLD.damageMaxRange() * uint(_tier);
+        uint damageModifier = _seed % tierDamageRange;
+        return baseDamage + damageModifier;
     }
 
     function isUniqueItem(ItemTier _tier) internal pure returns (bool) {
