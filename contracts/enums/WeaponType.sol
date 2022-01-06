@@ -2,4 +2,4 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-enum WeaponType {Sword, Staff, Bow}
+enum WeaponType {Sword, Bow, Staff}

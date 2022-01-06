@@ -44,9 +44,9 @@ contract Vault {
     }
     
     function getDamageModifier(ItemTier _tier, uint _seed) public view returns (uint) {
-        uint256 tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
-        uint256 weaponDamageRange = tierBaseDamage / (WORLD.damageMaxRange() / 100);
-        uint256 weaponDamageFactor = _seed % weaponDamageRange;
+        uint tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
+        int weaponDamageRange = tierBaseDamage / (WORLD.damageMaxRange() / 100);
+        uint weaponDamageFactor = _seed % weaponDamageRange;
         return tierBaseDamage + weaponDamageFactor;
     }
 
