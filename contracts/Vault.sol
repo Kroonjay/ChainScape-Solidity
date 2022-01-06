@@ -15,22 +15,12 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 contract Vault {
     
     using EnumerableSet for EnumerableSet.AddressSet;
+    
+    World constant private WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8); //TODO Update this with Actual Contract
+    
+    EnumerableSet.UintSet private weaponTypes; //Allow external access via values() in custom getter
 
-    event ItemCreated(ItemTier indexed tier, EquipmentSlot indexed slot);
-    
-    address public owner;
-    
-    World constant private WORLD = World(0x0b2Ec57f2Cee82C2E66b3Bf624e716Ff77126906); //TODO Update this with Actual Contract
-    
-    mapping(ItemTier => WeaponBase[]) public weaponBases;
-    
-    mapping(ItemTier =>mapping(EquipmentSlot => uint16)) private vaultCounter;
-    
-    mapping(ItemTier =>mapping(EquipmentSlot => Item[])) private commonItems; //Common Items are pre-generated and can be shared among users.  All common items should be owned by the current warden.  
-    
-    EnumerableSet.UintSet private weaponTypes;
-
-    EnumerableSet.UintSet private damageTypes; //Allow external access via values() in custom getter
+    mapping(WeaponType => DamageType) public weaponDamageTypes; 
     
     modifier isOwner() {
         require(msg.sender == WORLD.owner());
@@ -42,13 +32,12 @@ contract Vault {
         _;
     }
 
-    constructor() {
-        owner = msg.sender;
-        rewardNonce = 1;
-    }
-
     function getDamageTypes() public view returns (uint[]) {
         return damageTypes.values();
+    }
+
+    function getDamageType(WeaponType _weaponType) public view returns (uint) {
+        return weaponDamageTypes[_weaponType];
     }
   
     function getWeaponTypes() public view returns (uint[]) {
@@ -59,20 +48,17 @@ contract Vault {
         uint seedIndex = _seed % weaponTypes.length();
         return weaponTypes.at(seedIndex);
     }
+
+    function addWeapon(WeaponType _weaponType, DamageType _damageType) public returns (bool success) {
+        success = weaponTypes.add(_weaponType);
+        weaponDamageTypes[_weaponType] = _damageType;
+    }
     
     function getDamageModifier(ItemTier _tier, uint _seed) public view returns (uint) {
         uint256 tierBaseDamage = WORLD.baseWeaponDamage() ** uint(_tier);
         uint256 weaponDamageRange = tierBaseDamage / (WORLD.damageMaxRange() / 100);
         uint256 weaponDamageFactor = _seed % weaponDamageRange;
         return tierBaseDamage + weaponDamageFactor;
-    }
-
-    function addWeaponType(WeaponType _weaponType) public isOwner{
-        require(weaponTypes.add(_weaponType), "Value already Present!");
-    }
-
-    function addDamageType(DamageType _damageType) public isOwner{
-        require(damageTypes.add(_damageType), "Value already Present!");
     }
 
     function isUniqueItem(ItemTier _tier) internal pure returns (bool) {
