@@ -19,6 +19,8 @@ contract Vault {
     
     EnumerableSet.UintSet private weaponTypes; //Allow external access via values() in custom getter
 
+    mapping(uint => WeaponType) public weaponTypeMap; //Allows us to retrieve a WeaponType instead of a standard uint
+
     mapping(WeaponType => DamageType) public weaponDamageTypes;
 
     mapping(DamageType => Skill) public weaponSkillRequirements;
@@ -36,14 +38,17 @@ contract Vault {
         return weaponTypes.values();
     }
 
-    function getWeaponType(uint _seed) public view returns (uint) {
+    function getWeaponType(uint _seed) public view returns (WeaponType) {
         uint seedIndex = _seed % weaponTypes.length();
-        return weaponTypes.at(seedIndex);
+        return weaponTypeMap[weaponTypes.at(seedIndex)];
     }
 
     function addWeapon(WeaponType _weaponType, DamageType _damageType) public returns (bool success) {
         success = weaponTypes.add(uint(_weaponType));
-        weaponDamageTypes[_weaponType] = _damageType;
+        if(success) {
+            weaponTypeMap[uint(_weaponType)] = _weaponType; //Don't update the mapping unless we have a new WeaponType
+        }
+        weaponDamageTypes[_weaponType] = _damageType; //Allows us to update DamageType for existing weapons
     }
     
     function getWeaponDamage(ItemTier _tier, uint _seed) public view returns (uint) {
