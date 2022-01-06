@@ -60,7 +60,7 @@ contract World {
     }
     
     constructor() {
-       owner = msg.sender;
+       zima = msg.sender;
        blocksPerTick = 2;
        starterExperience = 1000000;
        levelMod = 1000000;
@@ -75,7 +75,7 @@ contract World {
        return starterExperienceMapping[starterClass];
     }
    
-    function setStarterSkill (StarterClass starterClass, Skill skill, uint256 skillXp) public isOwner {
+    function setStarterSkill (StarterClass starterClass, Skill skill, uint256 skillXp) public isZima {
        if (skill == Skill.Strength) {
            starterExperienceMapping[starterClass].strength = skillXp;
        } else if (skill == Skill.Sorcery) {
@@ -97,7 +97,7 @@ contract World {
        return starterEquipmentMapping[starterClass];
    }
    
-   function setStarterItem (StarterClass starterClass, EquipmentSlot equipmentSlot, address newItem) public isOwner {
+   function setStarterItem (StarterClass starterClass, EquipmentSlot equipmentSlot, address newItem) public isZima {
        //TODO Figure out a better way to do this
        if (equipmentSlot == EquipmentSlot.Helmet) {
            starterEquipmentMapping[starterClass].helmet = newItem;
@@ -118,45 +118,45 @@ contract World {
     }
    
 
-    function setWarden(address newWarden) public isOwner {
+    function setWarden(address newWarden) public isZima {
        emit WardenSet(warden, newWarden);
        warden = newWarden;
     }
    
-    function setVault(address _newVault) public isOwner {
+    function setVault(address _newVault) public isZima {
         emit VaultSet(vault, _newVault);
         vault = _newVault;
     }
 
-    function setBlocksPerTick(uint _blocks) external isOwner {
+    function setBlocksPerTick(uint _blocks) external isZima {
         blocksPerTick = _blocks;
     }
 
-    function setBaseWeaponDamage(uint _damage) external isOwner {
+    function setBaseWeaponDamage(uint _damage) external isZima {
         baseWeaponDamage = _damage;
     }
 
-    function setDamageMaxRange(uint _range) external isOwner {
+    function setDamageMaxRange(uint _range) external isZima {
         damageMaxRange = _range;
     }
 
-    function setBaseDamageReduction(uint _damage) external isOwner {
+    function setBaseDamageReduction(uint _damage) external isZima {
         baseDamageReduction = _damage;
     }
 
-    function setExperiencePerHit(uint _xp) external isOwner {
+    function setExperiencePerHit(uint _xp) external isZima {
         experiencePerHit = _xp;
     }
 
-    function setArenaMaxTicks(uint _ticks) external isOwner {
+    function setArenaMaxTicks(uint _ticks) external isZima {
         arenaMaxTicks = _ticks;
     }
 
-    function setInventorySlots(uint _slots) external isOwner {
+    function setInventorySlots(uint _slots) external isZima {
         inventorySlots = _slots;
     }
 
-    function updateAttackableEntity(EntityType _eType, bool canAttack) external isOwner {
+    function updateAttackableEntity(EntityType _eType, bool canAttack) external isZima {
         attackableEntities[_eType] = canAttack;
     }
 
