@@ -2,4 +2,4 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-enum Skill { Strength, Sorcery, Archery, Stamina, Life, Defense }
+enum Skill { Strength, Archery, Sorcery, Stamina, Life, Defense }

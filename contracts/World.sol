@@ -20,7 +20,7 @@ contract World {
    event PlayerCreated(address indexed newPlayer, address indexed owner, StarterClass indexed starterClass);
    
    
-    address public owner;
+    address public zima;
     
     address public warden;
     address public vault;
@@ -50,14 +50,12 @@ contract World {
 
     mapping(EntityType => bool) public attackableEntities;
 
-    mapping(Skill => DamageType) public skillDamageTypes;
 
 
 
 
-
-    modifier isOwner() {
-        require(msg.sender == owner, "Caller is not owner");
+    modifier isZima() {
+        require(msg.sender == zima, "Caller is not Zima!");
         _;
     }
     

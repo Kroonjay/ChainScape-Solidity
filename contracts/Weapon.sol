@@ -11,7 +11,7 @@ import "./Vault.sol";
 contract Weapon is Item {
     
     
-    uint public weaponType;
+    WeaponType public weaponType;
     
     uint public damage;
     
@@ -21,7 +21,7 @@ contract Weapon is Item {
     
     uint public levelRequirement; //The skill (Strength, Sorcery, Archery) is determined based on DamageType
     
-    bool public identified;
+    bool public identified; //TODO Figure out how best to use this
     
     constructor(ItemTier _tier, uint _seed, address _owner) Item(EquipmentSlot.Weapon, _tier, _seed, _owner) {
     }

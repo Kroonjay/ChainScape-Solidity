@@ -7,9 +7,9 @@ import "./Arena.sol";
 import "./Player.sol";
 import "./Boss.sol";
 import "./Vault.sol";
+import "./Weapon.sol";
 import "./enums/Status.sol";
 import "./enums/ItemTier.sol";
-import "./structs/PlayerState.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Warden {
@@ -34,13 +34,8 @@ contract Warden {
 
 
 
-    modifier isOwner() {
-        // If the first argument of 'require' evaluates to 'false', execution terminates and all
-        // changes to the state and to Ether balances are reverted.
-        // This used to consume all gas in old EVM versions, but not anymore.
-        // It is often a good idea to use 'require' to check if functions are called correctly.
-        // As a second argument, you can also provide an explanation about what went wrong.
-        require(msg.sender == WORLD.owner(), "Caller is not World Owner");
+    modifier isZima() {
+        require(msg.sender == WORLD.zima(), "Caller is not Zima!");
         _;
     }
     
@@ -117,7 +112,7 @@ contract Warden {
         arenas.add(_newArenaAddress);
     }
 
-    function getArenas() external view isOwner returns (address[] memory) {
+    function getArenas() external view returns (address[] memory) {
         return arenas.values();
     }
 
@@ -145,5 +140,10 @@ contract Warden {
         for (uint i = 0; i < arenas.length(); i++){
             handleArena(arenas.at(i));
         }
+    }
+
+    function spawnWeapon(ItemTier _tier, uint _seed) public isZima returns (address) {
+        Weapon newWeapon = new Weapon(_tier, _seed, WORLD.zima()); //Hard-code all items to be owned by Zima
+        return address(newWeapon);
     }
 }

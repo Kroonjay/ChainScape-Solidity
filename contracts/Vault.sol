@@ -8,7 +8,7 @@ import "./enums/WeaponType.sol";
 import "./enums/ItemTier.sol";
 import "./enums/EquipmentSlot.sol";
 import "./enums/Skill.sol";
-import "./structs/WeaponBase.sol";
+
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Vault {
