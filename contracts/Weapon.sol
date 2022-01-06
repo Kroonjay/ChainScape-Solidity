@@ -11,7 +11,7 @@ import "./Vault.sol";
 contract Weapon is Item {
     
     
-    WeaponType public weaponType;
+    uint public weaponType;
     
     uint public damage;
     
