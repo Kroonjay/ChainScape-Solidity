@@ -15,6 +15,9 @@ contract Vault {
     
     using EnumerableSet for EnumerableSet.UintSet;
     
+    event WeaponAdded(WeaponType indexed _weaponType, DamageType indexed _damageType);
+
+
     World constant private WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8); //TODO Update this with Actual Contract
     
     EnumerableSet.UintSet private weaponTypes; //Allow external access via values() in custom getter
@@ -47,8 +50,10 @@ contract Vault {
         success = weaponTypes.add(uint(_weaponType));
         if(success) {
             weaponTypeMap[uint(_weaponType)] = _weaponType; //Don't update the mapping unless we have a new WeaponType
+            emit WeaponAdded(_weaponType, _damageType);
         }
         weaponDamageTypes[_weaponType] = _damageType; //Allows us to update DamageType for existing weapons
+        
     }
     
     function getWeaponDamage(ItemTier _tier, uint _seed) public view returns (uint) {
