@@ -63,7 +63,7 @@ contract Vault {
     }
 
     function setWeaponSkillRequirement(DamageType _damageType, Skill _skill) public isOwner {
-         damageSkillMap[_damageType] = _skill;
+        weaponSkillRequirements[_damageType] = _skill;
     }
 
     function getLevelRequirement(ItemTier _tier) public pure returns (uint) {
