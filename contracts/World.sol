@@ -43,10 +43,6 @@ contract World {
     uint public arenaMaxTicks;
 
     uint public inventorySlots;
-    
-    mapping (StarterClass => Equipment) starterEquipmentMapping;
-    
-    mapping (StarterClass => Experience) starterExperienceMapping;
 
     mapping(EntityType => bool) public attackableEntities;
 
@@ -69,52 +65,6 @@ contract World {
        baseDamageReduction = 50;
        experiencePerHit = 1;
        arenaMaxTicks = 100;
-    }
-   
-    function getStarterExperience (StarterClass starterClass) external view returns (Experience memory) {
-       return starterExperienceMapping[starterClass];
-    }
-   
-    function setStarterSkill (StarterClass starterClass, Skill skill, uint256 skillXp) public isZima {
-       if (skill == Skill.Strength) {
-           starterExperienceMapping[starterClass].strength = skillXp;
-       } else if (skill == Skill.Sorcery) {
-           starterExperienceMapping[starterClass].sorcery = skillXp;
-       } else if (skill == Skill.Archery) {
-           starterExperienceMapping[starterClass].archery = skillXp;
-       } else if (skill == Skill.Stamina) {
-           starterExperienceMapping[starterClass].stamina = skillXp;
-       } else if (skill == Skill.Life) {
-           starterExperienceMapping[starterClass].life = skillXp;
-       } else if (skill == Skill.Defense) {
-           starterExperienceMapping[starterClass].defense = skillXp;
-       } else {
-           revert ("Skill is Not Yet Supported!");
-       }
-   }
-   
-   function getStarterEquipment (StarterClass starterClass) external view returns (Equipment memory) {
-       return starterEquipmentMapping[starterClass];
-   }
-   
-   function setStarterItem (StarterClass starterClass, EquipmentSlot equipmentSlot, address newItem) public isZima {
-       //TODO Figure out a better way to do this
-       if (equipmentSlot == EquipmentSlot.Helmet) {
-           starterEquipmentMapping[starterClass].helmet = newItem;
-       } else if (equipmentSlot == EquipmentSlot.Armor) {
-           starterEquipmentMapping[starterClass].armor = newItem;
-       } else if (equipmentSlot == EquipmentSlot.Weapon) {
-           starterEquipmentMapping[starterClass].weapon = newItem;
-       } else if (equipmentSlot == EquipmentSlot.Blessing) {
-           starterEquipmentMapping[starterClass].blessing = newItem;
-       } else {
-           //Uhh should probably make sure this isn't a bad idea
-           revert("Equipment Slot is Not Yet Supported!");
-       }
-   }
-   
-    function getPlayerLevel (Experience memory _playerXp) external view returns (uint256) {
-       return ((_playerXp.strength + _playerXp.sorcery + _playerXp.archery) / 3 + _playerXp.defense + _playerXp.life) % levelMod;
     }
    
 
