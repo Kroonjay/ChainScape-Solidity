@@ -7,7 +7,7 @@ import "./Arena.sol";
 import "./Player.sol";
 import "./Boss.sol";
 import "./Vault.sol";
-import "./Weapon.sol";
+import "./Item.sol";
 import "./enums/Status.sol";
 import "./enums/ItemTier.sol";
 import "./enums/EquipmentSlot.sol";
@@ -115,9 +115,14 @@ contract Warden {
             handleArena(arenas.at(i));
         }
     }
-    //TODO Update this to use isArena modifier once done testing
-    function spawnItem(EquipmentSlot _slot, ItemTier _tier, uint _seed, address _owner) public isZima returns (address) {
-        Item newItem = new Item(_slot, _tier, _seed, _owner);
+
+    function spawnItem(EquipmentSlot _slot, ItemTier _tier, address _owner) public isArena returns (address) {
+        Item newItem = new Item(_slot, _tier, getItemSeed(), _owner);
+        return address(newItem);
+    }
+
+    function spawnItem(EquipmentSlot _slot, ItemTier _tier, uint _seed) public isZima returns (address) {
+        Item newItem = new Item(_slot, _tier, _seed, WORLD.zima());
         return address(newItem);
     }
 }
