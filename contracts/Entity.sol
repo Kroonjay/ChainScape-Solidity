@@ -164,13 +164,13 @@ contract Entity {
     }
 
     function getDamageOutput() public view canAttack returns (uint) {
-        Weapon weapon = Weapon(address(equipment[EquipmentSlot.Weapon]));
+        Weapon weapon = Weapon(address(equipment.weapon));
         return getCombatLevel() * weapon.damage();
     }
 
     function attack() external canAttack onlyIfAlive isArena {
-        Weapon weapon = Weapon(address(equipment[EquipmentSlot.Weapon]));
-        grantExperience(weapon.skill(), getDamageOutput());
+        Weapon weapon = Weapon(address(equipment.weapon));
+        grantExperience(weapon.skillRequirement(), getDamageOutput());
     }
 
     function damage(uint _damageAmount) external canAttack onlyIfAlive isArena returns (bool) {
