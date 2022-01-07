@@ -32,8 +32,4 @@ contract Player is Entity {
         experience[_skill] = skillExperience;
         emit GainedExperience(_skill, _experience);
     }
-
-    function getHash() external view returns (bytes32) {
-        return keccak256(abi.encodePacked(owner, inventory));
-    }
 }

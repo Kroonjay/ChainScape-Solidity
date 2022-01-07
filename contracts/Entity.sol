@@ -33,7 +33,6 @@ contract Entity {
 
     uint public tile;
 
-
     World constant public WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8);
     
     // event for EVM logging
@@ -82,7 +81,7 @@ contract Entity {
     
     
     function receiveItem(Item _item) external isWarden {
-        inventory.add(_item);
+        inventory.add(address(_item));
         emit AddedInventoryItem(_item);
     }
 
