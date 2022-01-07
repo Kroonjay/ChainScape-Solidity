@@ -2,9 +2,6 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //SPDX-License-Identifier: UNLICENSED
 
-
-import "./structs/Equipment.sol";
-import "./structs/Experience.sol";
 import "./enums/EquipmentSlot.sol";
 import "./enums/StarterClass.sol";
 import "./enums/Skill.sol";
@@ -27,8 +24,6 @@ contract World {
     
     
     uint public blocksPerTick; //Determines number of blocks between Game Ticks, called by Warden
-    
-    uint starterExperience;
     
     uint public levelMod;
 
@@ -58,7 +53,6 @@ contract World {
     constructor() {
        zima = msg.sender;
        blocksPerTick = 2;
-       starterExperience = 1000000;
        levelMod = 1000000;
        baseWeaponDamage = 50;
        damageMaxRange = 20;
