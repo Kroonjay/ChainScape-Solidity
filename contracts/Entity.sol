@@ -12,20 +12,22 @@ import "./enums/EquipmentSlot.sol";
 import "./enums/Skill.sol";
 import "./enums/Objective.sol";
 import "./enums/EntityType.sol";
-import "./enums/Status.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
+
 
 contract Entity {
 
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     EntityType public eType;
 
-    mapping(EquipmentSlot => Item) equipment;
+    Equipment public equipment;
    
     mapping(Skill => uint256) experience;
     
-    Item[] public inventory;
+    EnumerableSet.AddressSet private inventory;
 
-    uint256 public health;
-
+    uint public health;
 
     address public arena;
 
@@ -66,13 +68,10 @@ contract Entity {
         require(isAlive(), "Entity is Not Alive!");
         _;
     }
-
-
-    bool public isSafe;   // if True, player cannot be attacked by others
     
     address public owner;
     
-    uint8 public level;
+    uint public level;
     
     //All Players must be created by World contract, caller of World's createPlayer function is passed in.  
     constructor(address _owner, EntityType _type) {
@@ -82,8 +81,8 @@ contract Entity {
     }
     
     
-    function addItemToInventory(Item _item) external isWarden {
-        inventory.push(_item);
+    function receiveItem(Item _item) external isWarden {
+        inventory.add(_item);
         emit AddedInventoryItem(_item);
     }
 
@@ -114,11 +113,15 @@ contract Entity {
     }
 
     //TODO Level Requirements for Items currently doesn't work
-    function equipItem(uint8 _inventorySlot) public isOwner {
-        require(_inventorySlot < inventory.length, "Inventory Slot is Invalid");
-        EquipmentSlot itemSlot = inventory[_inventorySlot].slot();
-        equipment[itemSlot] = inventory[_inventorySlot];
-        emit EquippedItem(itemSlot, inventory[_inventorySlot]);
+    function equipItem(uint _inventorySlot) public isOwner {
+        require(_inventorySlot < inventory.length(), "Invalid Slot");
+        address inventoryAddress = inventory.at(_inventorySlot);
+        Item inventoryItem = Item(inventoryAddress);
+        if(inventoryItem.slot() == EquipmentSlot.Weapon){
+            equipment.weapon = Weapon(inventoryAddress);
+            inventory.remove(inventoryAddress);
+            emit EquippedItem(inventoryItem.slot(), inventoryItem);
+        }
     }
 
 

@@ -22,11 +22,11 @@ contract Warden {
 
     uint private tickBlockHeight;
 
-    uint256 public tickNumber;
+    uint public tickNumber;
     
-    uint256 private seed;
-    uint256 private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
-    uint256 private arenaNonce;
+    uint private seed;
+    uint private itemNonce; //Incremented each time a unique Item is created.  Else all items in a given tick would be identical
+    uint private arenaNonce;
 
     EnumerableSet.AddressSet private arenas;
 
@@ -41,7 +41,7 @@ contract Warden {
     
     modifier isNextTick() {
         //Checks current block height against previous tick's height + number of blocks per tick defined in World contract.  
-        uint256 nextTickHeight = tickBlockHeight + WORLD.blocksPerTick();
+        uint nextTickHeight = tickBlockHeight + WORLD.blocksPerTick();
         require(block.number >= nextTickHeight, "Not Ready to Advance Tick!");
         _;
     }
@@ -54,7 +54,7 @@ contract Warden {
     }
    
     //To be Called by World Contract
-    constructor(uint256 _seed) {
+    constructor(uint _seed) {
         WORLD = World(msg.sender);
         tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
@@ -79,11 +79,11 @@ contract Warden {
 
     }
     
-    function grantExperienceReward(Player _player, Skill _skill, uint256 _experience) external isArena {
+    function grantExperienceReward(Player _player, Skill _skill, uint _experience) external isArena {
         _player.receiveExperience(_skill, _experience);
     }
 
-    function tick(uint256 _seed) external isZima isNextTick {
+    function tick(uint _seed) external isZima isNextTick {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;
