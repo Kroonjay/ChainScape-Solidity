@@ -185,12 +185,8 @@ contract Arena {
         }
     }
 
-    function open(Boss _boss) external isWarden isNew {
-        if (_boss.arena() != address(this)){
-            revert("Boss Arena Mismatch!");
-        }
-        boss = _boss;
-        spawnEntity(boss);
+    function open() external isWarden isNew {
+        //TODO Finish Bossery and update func to spwan boss
         setStatus(Status.Open);
     }
 

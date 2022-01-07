@@ -10,6 +10,7 @@ import "./Vault.sol";
 import "./Weapon.sol";
 import "./enums/Status.sol";
 import "./enums/ItemTier.sol";
+import "./enums/EquipmentSlot.sol";
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/structs/EnumerableSet.sol";
 
 contract Warden {
@@ -35,21 +36,21 @@ contract Warden {
 
 
     modifier isZima() {
-        require(msg.sender == WORLD.zima(), "Caller is not Zima!");
+        require(msg.sender == WORLD.zima(), "Caller not Zima!");
         _;
     }
     
     modifier isNextTick() {
         //Checks current block height against previous tick's height + number of blocks per tick defined in World contract.  
         uint nextTickHeight = tickBlockHeight + WORLD.blocksPerTick();
-        require(block.number >= nextTickHeight, "Not Ready to Advance Tick!");
+        require(block.number >= nextTickHeight, "Not Ready!");
         _;
     }
 
     modifier isArena() {
         //Checks arenaStatus of caller to ensure they're an active Arena (status == 1)
         Arena arena = Arena(msg.sender);
-        require(arenas.contains(msg.sender), "Caller is Not an Arena!");
+        require(arenas.contains(msg.sender), "Caller Not Arena!");
         _;
     }
    
@@ -72,38 +73,12 @@ contract Warden {
         return seed ^ arenaNonce;
     }
 
-    function grantItemReward(Player _player, ItemTier _tier) external isArena {
-        Vault vault = Vault(WORLD.vault());
-        Item rewardItem = vault.generateReward(_tier, seed);
-        _player.addItemToInventory(rewardItem);
-
-    }
-    
-    function grantExperienceReward(Player _player, Skill _skill, uint _experience) external isArena {
-        _player.receiveExperience(_skill, _experience);
-    }
-
     function tick(uint _seed) external isZima isNextTick {
         tickBlockHeight = block.number;
         seed = _seed;
         tickNumber++;
         handleArenas();
         emit GameTick(tickNumber, tickBlockHeight, arenas.length());
-    }
-
-    function createBoss(Arena _arena) internal returns (Boss _newBoss) {
-        _newBoss = new Boss(_arena.tier(), seed);
-        address arenaAddress = address(_arena);
-        Vault vault = Vault(WORLD.vault());
-        for (uint i = 0; i < WORLD.inventorySlots(); i++){
-            _newBoss.addItemToInventory(vault.generateReward(_arena.tier(), seed));
-        }
-        _newBoss.setArena(arenaAddress);
-        if (_newBoss.arena() == arenaAddress) {
-            return _newBoss;
-        } else {
-            revert("Failed to Create Boss - Arena Mismatch!");
-        }
     }
 
     function createArena(ItemTier _tier) external returns (address _newArenaAddress) {
@@ -125,8 +100,7 @@ contract Warden {
         Arena arena = Arena(_arena);
         Status arenaStatus = arena.status();
         if (arenaStatus == Status.New) {
-            Boss arenaBoss = createBoss(arena);
-            arena.open(arenaBoss);
+            arena.open();
         } else if (arenaStatus == Status.Complete) {
             arena.close();
         } else if (arenaStatus == Status.Closed) {
@@ -141,9 +115,9 @@ contract Warden {
             handleArena(arenas.at(i));
         }
     }
-
-    function spawnWeapon(ItemTier _tier, uint _seed) public isZima returns (address) {
-        Weapon newWeapon = new Weapon(_tier, _seed, WORLD.zima()); //Hard-code all items to be owned by Zima
-        return address(newWeapon);
+    //TODO Update this to use isArena modifier once done testing
+    function spawnItem(EquipmentSlot _slot, ItemTier _tier, uint _seed, address _owner) public isZima returns (address) {
+        Item newItem = new Item(_slot, _tier, _seed, _owner);
+        return address(newItem);
     }
 }

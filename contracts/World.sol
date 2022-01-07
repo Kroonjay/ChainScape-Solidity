@@ -39,6 +39,8 @@ contract World {
 
     uint public inventorySlots;
 
+    uint8 public rewardsPerTier;
+
     mapping(EntityType => bool) public attackableEntities;
 
 
@@ -59,6 +61,7 @@ contract World {
        baseDamageReduction = 50;
        experiencePerHit = 1;
        arenaMaxTicks = 100;
+       rewardsPerTier = 3;
     }
    
 
