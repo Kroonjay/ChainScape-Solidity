@@ -18,7 +18,7 @@ contract Vault {
     event WeaponAdded(WeaponType indexed _weaponType, DamageType indexed _damageType);
 
 
-    World constant private WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8); //TODO Update this with Actual Contract
+    World constant private WORLD = World(0x8Fde71F1A705989aEB1675e8E45798B5690a8Aee); //TODO Update this with Actual Contract
     
     EnumerableSet.UintSet private weaponTypes; //Allow external access via values() in custom getter
 

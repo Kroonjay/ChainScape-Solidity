@@ -33,7 +33,7 @@ contract Entity {
 
     uint public tile;
 
-    World constant public WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8);
+    World constant public WORLD = World(0x8Fde71F1A705989aEB1675e8E45798B5690a8Aee);
     
     // event for EVM logging
     event EntityCreated(address indexed owner, EntityType entityType);

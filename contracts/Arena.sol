@@ -19,7 +19,7 @@ import "./structs/Tile.sol";
 
 contract Arena {
 
-    World constant private WORLD = World(0x992DA8eC2af8ec58E89E3293Fb3aaC8ebD7602B8);
+    World constant private WORLD = World(0x8Fde71F1A705989aEB1675e8E45798B5690a8Aee);
 
     ItemTier public tier;
 

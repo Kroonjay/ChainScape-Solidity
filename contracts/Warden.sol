@@ -19,7 +19,7 @@ contract Warden {
 
     event GameTick(uint256 indexed tickNumber, uint256 indexed tickBlockHeight, uint advancableArenas);
     
-    World public immutable WORLD;
+    World public constant WORLD = World(0x8Fde71F1A705989aEB1675e8E45798B5690a8Aee);
 
     uint private tickBlockHeight;
 
@@ -56,7 +56,6 @@ contract Warden {
    
     //To be Called by World Contract
     constructor(uint _seed) {
-        WORLD = World(msg.sender);
         tickNumber = 1; //Increment our tick
         tickBlockHeight = block.number; //Set tickBlockHeight to current block
         seed = _seed;
